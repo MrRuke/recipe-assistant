@@ -72,41 +72,54 @@ generation_config = types.GenerateContentConfig(
 )
 
 
-print("Доступные модели:")
-for model in client.models.list():
-    if "generateContent" in model.supported_actions:
-        print(model.name)
+def start_recipe_creation():
+    chat = client.chats.create(model="gemini-2.5-flash", config=generation_config)
 
+    system_instruction = "Ты профессиональный диетолог. Составляй и корректируй ПП-рецепты по запросу пользователя. Обязательно возвращай ответ строго в требуемом JSON формате."
 
-def get_recipe(user_query):
-    prompt = f"""
-    Ты профессиональный диетолог. Составь ПП-рецепт по запросу пользователя.
-    Запрос: {user_query}
-    В ответе верни только сырой JSON согласно схеме.
-    """
-
-    print("Генерирую рецепт, подожди пару секунд...")
-    response = client.models.generate_content(
-        model="gemini-2.5-flash", contents=f"Запрос: {prompt}", config=generation_config
-    )
-
-    return json.loads(response.text)
-
-
-if __name__ == "__main__":
     query = input(
-        "Какой ПП-рецепт тебе нужен? (например: ужин с рыбой до 300 ккал):\n> "
+        "Какой ПП-рецепт тебе нужен? (например: ужин с говядиной до 400 ккал):\n> "
     )
+    print("\nГенерирую первый вариант рецепта...")
+    response = chat.send_message(
+        message=f"{system_instruction}\nЗапрос: {query}", config=generation_config
+    )
+    recipe_data = json.loads(response.text)
 
-    try:
-        recipe_data = get_recipe(query)
-        print("\n=== ТВОЙ РЕЦЕПТ ===")
+    MAX_REVISIONS = 2
+
+    print("\n=== ОБНОВЛЕННЫЙ РЕЦЕПТ ===")
+    print(json.dumps(recipe_data, indent=4, ensure_ascii=False))
+    print("===================\n")
+
+    for i in range(MAX_REVISIONS):
+        refinement = input(
+            f"Есть ли пожелания по изменению? (Осталось правок: {MAX_REVISIONS - i}).\nНапиши, что изменить, или нажми Enter, чтобы продолжить без изменений:\n> "
+        )
+
+        if not refinement.strip():
+            print("Оставляем текущий вариант.")
+            break
+
+        print(f"\nОбновляю рецепт с учетом: '{refinement}'...")
+
+        response = chat.send_message(
+            f"Измени предыдущий рецепт с учетом этого пожелания: {refinement}. Пересчитай КБЖУ и время, если требуется. Верни полностью обновленный рецепт в формате JSON."
+        )
+        recipe_data = json.loads(response.text)
+
+        print("\n=== ОБНОВЛЕННЫЙ РЕЦЕПТ ===")
         print(json.dumps(recipe_data, indent=4, ensure_ascii=False))
         print("===================\n")
 
-        save_choice = input("Сохранить в избранное? (y/n): ")
-        if save_choice.lower() == "y":
-            print("Здесь будет логика сохранения в SQLite!")
+    save_choice = input("Сохранить итоговый вариант в избранное? (y/n): ")
+    if save_choice.lower() == "y":
+        print("\n[Симуляция] Рецепт успешно сохранен в базу данных!")
+
+
+if __name__ == "__main__":
+    try:
+        start_recipe_creation()
 
     except Exception as e:
         print(f"Произошла ошибка: {e}")
