@@ -1,10 +1,17 @@
 import json
 import os
-
+import sqlite3
 from dotenv import load_dotenv
 from google.genai import Client, types
+from pydantic import BaseModel
+from typing import Optional, Dict, Any
+from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
+
 
 load_dotenv()
+
+DB_NAME = "pp_recipes.db"
 
 api_key = os.getenv("GEMINI_API_KEY")
 client = Client(api_key=api_key)
@@ -64,62 +71,131 @@ recipe_schema = {
     ],
 }
 
+
+system_instruction = "Ты профессиональный диетолог. Составляй и корректируй ПП-рецепты по запросу пользователя. Обязательно возвращай ответ строго в требуемом JSON формате."
+
 generation_config = types.GenerateContentConfig(
-    # system_instruction=system_instruction,
+    system_instruction=system_instruction,
     response_mime_type="application/json",
     response_schema=recipe_schema,
     temperature=0.4,
 )
 
 
-def start_recipe_creation():
-    chat = client.chats.create(model="gemini-2.5-flash", config=generation_config)
+class GenerateRequest(BaseModel):
+    query: str
 
-    system_instruction = "Ты профессиональный диетолог. Составляй и корректируй ПП-рецепты по запросу пользователя. Обязательно возвращай ответ строго в требуемом JSON формате."
 
-    query = input(
-        "Какой ПП-рецепт тебе нужен? (например: ужин с говядиной до 400 ккал):\n> "
-    )
-    print("\nГенерирую первый вариант рецепта...")
-    response = chat.send_message(
-        message=f"{system_instruction}\nЗапрос: {query}", config=generation_config
-    )
-    recipe_data = json.loads(response.text)
+class RefineRequest(BaseModel):
+    current_recipe: Dict[str, Any]
+    refinement: str
 
-    MAX_REVISIONS = 2
 
-    print("\n=== ОБНОВЛЕННЫЙ РЕЦЕПТ ===")
-    print(json.dumps(recipe_data, indent=4, ensure_ascii=False))
-    print("===================\n")
+class SaveRequest(BaseModel):
+    original_query: str
+    recipe_data: Dict[str, Any]
 
-    for i in range(MAX_REVISIONS):
-        refinement = input(
-            f"Есть ли пожелания по изменению? (Осталось правок: {MAX_REVISIONS - i}).\nНапиши, что изменить, или нажми Enter, чтобы продолжить без изменений:\n> "
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS favorite_recipes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            original_query TEXT NOT NULL,
+            recipe_title TEXT NOT NULL,
+            recipe_json TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
+    """)
+    conn.commit()
+    conn.close()
 
-        if not refinement.strip():
-            print("Оставляем текущий вариант.")
-            break
-
-        print(f"\nОбновляю рецепт с учетом: '{refinement}'...")
-
-        response = chat.send_message(
-            f"Измени предыдущий рецепт с учетом этого пожелания: {refinement}. Пересчитай КБЖУ и время, если требуется. Верни полностью обновленный рецепт в формате JSON."
-        )
-        recipe_data = json.loads(response.text)
-
-        print("\n=== ОБНОВЛЕННЫЙ РЕЦЕПТ ===")
-        print(json.dumps(recipe_data, indent=4, ensure_ascii=False))
-        print("===================\n")
-
-    save_choice = input("Сохранить итоговый вариант в избранное? (y/n): ")
-    if save_choice.lower() == "y":
-        print("\n[Симуляция] Рецепт успешно сохранен в базу данных!")
+    yield
 
 
-if __name__ == "__main__":
+app = FastAPI(title="PP Recipes API", lifespan=lifespan)
+
+
+@app.post("/api/recipes/generate")
+async def generate_recipe(req: GenerateRequest):
     try:
-        start_recipe_creation()
-
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=f"Запрос: {req.query}",
+            config=generation_config,
+        )
+        if not response.text:
+            raise HTTPException(
+                status_code=500,
+                detail="Модель вернула пустой ответ (возможно, сработал фильтр безопасности).",
+            )
+        return json.loads(response.text)
     except Exception as e:
-        print(f"Произошла ошибка: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/recipes/refine")
+async def refine_recipe(req: RefineRequest):
+    try:
+        prompt = f"Вот текущий рецепт:\n{json.dumps(req.current_recipe, ensure_ascii=False)}\n\nПожелание по изменению: {req.refinement}\n\nВерни полностью обновленный рецепт, пересчитав КБЖУ и шаги, если это необходимо."
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash", contents=prompt, config=generation_config
+        )
+        if not response.text:
+            raise HTTPException(
+                status_code=500,
+                detail="Модель вернула пустой ответ (возможно, сработал фильтр безопасности).",
+            )
+        return json.loads(response.text)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/recipes/save")
+async def save_recipe(req: SaveRequest):
+    try:
+        conn = sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
+        title = req.recipe_data.get("title", "Без названия")
+        json_string = json.dumps(req.recipe_data, ensure_ascii=False)
+
+        cursor.execute(
+            """
+            INSERT INTO favorite_recipes (original_query, recipe_title, recipe_json)
+            VALUES (?, ?, ?)
+        """,
+            (req.original_query, title, json_string),
+        )
+        conn.commit()
+        conn.close()
+        return {"status": "success", "message": f"Рецепт '{title}' сохранен."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/recipes/favorites")
+async def get_favorites():
+    try:
+        conn = sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, recipe_title, recipe_json, created_at FROM favorite_recipes ORDER BY id DESC"
+        )
+        rows = cursor.fetchall()
+        conn.close()
+
+        favorites = [
+            {
+                "id": r[0],
+                "title": r[1],
+                "recipe_data": json.loads(r[2]),
+                "created_at": r[3],
+            }
+            for r in rows
+        ]
+        return {"favorites": favorites}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
