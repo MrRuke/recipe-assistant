@@ -1,0 +1,50 @@
+.recipe-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.description {
+    font-style: italic;
+    color: #7f8c8d;
+}
+
+.meta-info {
+    margin: 15px 0;
+}
+
+
+.time {
+    background: #f39c12;
+    color: white;
+}
+
+.calories {
+    background: #e74c3c;
+    color: white;
+}
+
+.macros-box {
+    display: flex;
+    justify-content: space-between;
+    background: #ecf0f1;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.recipe-content {
+    display: flex;
+    gap: 40px;
+}
+
+.column {
+    flex: 1;
+}
+
+.substitutions {
+    color: #8e44ad;
+    font-size: 0.9em;
+}

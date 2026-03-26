@@ -19,3 +19,10 @@ export interface Recipe {
     steps: string[];
     substitutions: string[];
 }
+
+export interface SavedRecipe {
+    id: number;
+    title: string;
+    recipe_data: Recipe; // Внутри лежит наш обычный рецепт
+    created_at: string;
+}

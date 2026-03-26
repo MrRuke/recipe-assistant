@@ -1,87 +1,11 @@
 <div class="container">
-  <h1>🍳 Генератор ПП-Рецептов</h1>
+    <h1>🍳 ПП-Рецепты с ИИ</h1>
 
-  <div class="search-box">
-    <input type="text" [(ngModel)]="searchQuery"
-      placeholder="Какой рецепт нужен? (например: ужин с курицей до 400 ккал)" [disabled]="isLoading()">
-
-    <button (click)="generateRecipe()" [disabled]="isLoading() || !searchQuery()">
-      {{ isLoading() ? 'Генерирую...' : 'Создать рецепт' }}
-    </button>
-  </div>
-
-
-  @if (isLoading()) {
-  <div class="loading">
-    <p>⏳ Идет магия ИИ, подождите пару секунд...</p>
-  </div>
-  }
-
-  @let current = currentRecipe();
-
-  @if (!isLoading() && current) {
-  <div class="recipe-card">
-    <h2>{{ current.title }}</h2>
-
-    <p class="description">{{ current.description }}</p>
-
-    <div class="meta-info">
-      <span class="badge time">⏱ {{ current.prep_time_minutes }} мин</span>
-
-      <span class="badge calories">🔥 {{ current.macros.calories }} ккал</span>
+    <div class="nav-tabs">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-btn">✨ Создать
+            рецепт</a>
+        <a routerLink="/favorites" routerLinkActive="active" class="nav-btn">📚 Мое Избранное</a>
     </div>
 
-    <div class="macros-box">
-      <div><strong>Белки:</strong> {{ current.macros.protein_g }}г</div>
-
-      <div><strong>Жиры:</strong> {{ current.macros.fat_g }}г</div>
-
-      <div><strong>Углеводы:</strong> {{ current.macros.carbs_g }}г</div>
-    </div>
-
-    <div class="recipe-content">
-      <div class="column">
-        <h3>🛒 Ингредиенты</h3>
-        <ul>
-          @for (item of current.ingredients; track $index) {
-          <li>
-            <strong>{{ item.name }}</strong> — {{ item.amount }}
-          </li>
-          }
-        </ul>
-
-        <h3>🔄 Возможные замены</h3>
-        <ul class="substitutions">
-
-          @for (sub of current.substitutions; track $index) {
-          <li>{{ sub }}</li>
-          }
-        </ul>
-      </div>
-
-      <div class="column">
-        <h3>👨‍🍳 Как готовить</h3>
-        <ol>
-          @for (step of current.steps; track $index) {
-          <li>{{ step }}</li>
-          }
-        </ol>
-      </div>
-    </div>
-
-    <div class="refine-box" *ngIf="revisionsLeft() > 0 && !isSaved()">
-      <p>Осталось правок: <strong>{{ revisionsLeft() }}</strong></p>
-
-      <input type="text" [(ngModel)]="refinementQuery" placeholder="Что изменить? (например: замени курицу на индейку)">
-
-      <button (click)="refineRecipe()" [disabled]="!refinementQuery()">Обновить рецепт</button>
-    </div>
-
-    <div class="actions">
-      <button class="save-btn" (click)="saveRecipe()" [disabled]="isSaved()">
-        {{ isSaved() ? '✅ Сохранено в БД' : '💾 Сохранить в Избранное' }}
-      </button>
-    </div>
-  </div>
-  }
+    <router-outlet></router-outlet>
 </div>

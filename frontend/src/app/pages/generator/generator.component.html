@@ -1,0 +1,38 @@
+<div class="search-box">
+    <input type="text" [(ngModel)]="searchQuery"
+        placeholder="Какой рецепт нужен? (например: ужин с курицей до 400 ккал)" [disabled]="isLoading()">
+
+    <button (click)="generateRecipe()" [disabled]="isLoading() || !searchQuery()">
+        {{ isLoading() ? 'Генерирую...' : 'Создать рецепт' }}
+    </button>
+</div>
+
+
+@if (isLoading()) {
+<div class="loading">
+    <p>⏳ Идет магия ИИ, подождите пару секунд...</p>
+</div>
+}
+
+@let current = currentRecipe();
+
+@if (!isLoading() && current) {
+<app-card [recipe]="current">
+    @if (revisionsLeft() > 0 && !isSaved()) {
+    <div class="refine-box">
+        <p>Осталось правок: <strong>{{ revisionsLeft() }}</strong></p>
+
+        <input type="text" [(ngModel)]="refinementQuery"
+            placeholder="Что изменить? (например: замени курицу на индейку)">
+
+        <button (click)="refineRecipe()" [disabled]="!refinementQuery()">Обновить рецепт</button>
+    </div>
+    }
+
+    <div class="actions">
+        <button class="save-btn" (click)="saveRecipe()" [disabled]="isSaved()">
+            {{ isSaved() ? '✅ Сохранено в БД' : '💾 Сохранить в Избранное' }}
+        </button>
+    </div>
+</app-card>
+}

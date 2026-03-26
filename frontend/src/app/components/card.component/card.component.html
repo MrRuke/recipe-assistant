@@ -1,0 +1,53 @@
+@let current = recipe();
+
+<div class="recipe-card">
+    <h2>{{ current.title }}</h2>
+
+    <p class="description">{{ current.description }}</p>
+
+    <div class="meta-info">
+        <span class="badge time">⏱ {{ current.prep_time_minutes }} мин</span>
+
+        <span class="badge calories">🔥 {{ current.macros.calories }} ккал</span>
+    </div>
+
+    <div class="macros-box">
+        <div><strong>Белки:</strong> {{ current.macros.protein_g }}г</div>
+
+        <div><strong>Жиры:</strong> {{ current.macros.fat_g }}г</div>
+
+        <div><strong>Углеводы:</strong> {{ current.macros.carbs_g }}г</div>
+    </div>
+
+    <div class="recipe-content">
+        <div class="column">
+            <h3>🛒 Ингредиенты</h3>
+            <ul>
+                @for (item of current.ingredients; track $index) {
+                <li>
+                    <strong>{{ item.name }}</strong> — {{ item.amount }}
+                </li>
+                }
+            </ul>
+
+            <h3>🔄 Возможные замены</h3>
+            <ul class="substitutions">
+
+                @for (sub of current.substitutions; track $index) {
+                <li>{{ sub }}</li>
+                }
+            </ul>
+        </div>
+
+        <div class="column">
+            <h3>👨‍🍳 Как готовить</h3>
+            <ol>
+                @for (step of current.steps; track $index) {
+                <li>{{ step }}</li>
+                }
+            </ol>
+        </div>
+    </div>
+
+    <ng-content></ng-content>
+</div>
