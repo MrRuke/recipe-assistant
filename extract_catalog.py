@@ -10,8 +10,9 @@ load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
 client = Client(api_key=api_key)
 
-PDF_FILE = "book1.pdf"
-TOC_PAGES = [4, 5, 6]
+BOOKS_TOC = {
+    "book1.pdf": [4, 5, 6],
+}
 
 
 def extract_toc_text(pdf_path, pages_to_read):
@@ -44,15 +45,23 @@ def generate_catalog_json(text):
 
 
 if __name__ == "__main__":
-    try:
-        toc_text = extract_toc_text(PDF_FILE, TOC_PAGES)
-        catalog_list = generate_catalog_json(toc_text)
+    master_catalog = []
+    for pdf_file, toc_pages in BOOKS_TOC.items():
+        print(f"\n🔍 Извлекаю рецепты из оглавления: {pdf_file}")
+        try:
+            toc_text = extract_toc_text(pdf_file, toc_pages)
+            catalog_list = generate_catalog_json(toc_text)
+            master_catalog.extend(catalog_list)
+            print(f"Добавлено {len(catalog_list)} рецептов из этой книги.")
+        except Exception as e:
+            print(f"❌ Ошибка при обработке {pdf_file}: {e}")
 
-        with open("catalog.json", "w", encoding="utf-8") as f:
-            json.dump(catalog_list, f, ensure_ascii=False, indent=4)
+    master_catalog = list(set(master_catalog))
+    master_catalog.sort()
 
-        print(
-            f"✅ Готово! Найдено {len(catalog_list)} рецептов. Сохранено в catalog.json"
-        )
-    except Exception as e:
-        print(f"❌ Ошибка: {e}")
+    with open("catalog.json", "w", encoding="utf-8") as f:
+        json.dump(master_catalog, f, ensure_ascii=False, indent=4)
+
+    print(
+        f"\n✅ Готово! Всего собрано {len(master_catalog)} уникальных рецептов из всех книг. Сохранено в catalog.json"
+    )

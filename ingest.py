@@ -91,10 +91,14 @@ def embed_and_store_pdf(file_path):
             )
             vector = response.embeddings[0].values  # type: ignore
 
+            safe_filename = file_path.replace(".pdf", "").replace(" ", "_")
+            unique_id = f"{safe_filename}_chunk_{i}"
+
             collection.add(
                 embeddings=[vector],  # type: ignore
                 documents=[chunk],
-                ids=[f"pdf_chunk_{i}"],
+                metadatas=[{"source": file_path}],
+                ids=[unique_id],
             )
             print(f"Сохранен фрагмент {i + 1}/{len(chunks)}")
         except Exception as e:
@@ -105,4 +109,6 @@ def embed_and_store_pdf(file_path):
 
 if __name__ == "__main__":
     # embed_and_store("recipe_book.txt")
-    embed_and_store_pdf("book1.pdf")
+    BOOKS = [
+        "book1.pdf",
+    ]
