@@ -1,7 +1,12 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Recipe } from './models/all.i';
+
+export interface Test {
+    groupName: string;
+    values: string;
+}
 
 @Injectable({
     providedIn: 'root'
@@ -30,5 +35,9 @@ export class RecipeService {
 
     getFavorites(): Observable<any> {
         return this.http.get(`${this.apiUrl}/favorites`);
+    }
+
+    getCatalog(): Observable<{catalog: Test[]}> {
+        return this.http.get<{catalog: Test[]}>(`${this.apiUrl}/catalog`);
     }
 }

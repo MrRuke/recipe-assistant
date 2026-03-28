@@ -1,0 +1,21 @@
+@let cat = catalog();
+@if (cat.length > 0) {
+<div class="catalog-section">
+    <h3>📖 Рецепты из базы знаний</h3>
+    <div class="catalog-tags">
+
+        @for (item of cat; track $index) {
+        <div>
+            <h3>{{ item.groupName }} </h3>
+
+
+            @for (value of item.values; track $index) {
+            <button class="catalog-tag">
+                {{ value}}
+            </button>
+            }
+        </div>
+        }
+    </div>
+</div>
+}
