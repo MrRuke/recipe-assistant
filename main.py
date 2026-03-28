@@ -1,14 +1,15 @@
 import json
 import os
 import sqlite3
+from contextlib import asynccontextmanager
+from typing import Any, Dict, Optional
+
+import chromadb
 from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from google.genai import Client, types
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
-from fastapi import FastAPI, HTTPException
-from contextlib import asynccontextmanager
-from fastapi.middleware.cors import CORSMiddleware
-
 
 load_dotenv()
 
@@ -16,6 +17,9 @@ DB_NAME = "pp_recipes.db"
 
 api_key = os.getenv("GEMINI_API_KEY")
 client = Client(api_key=api_key)
+
+chroma_client = chromadb.PersistentClient(path="./chroma_db")
+collection = chroma_client.get_or_create_collection(name="pp_recipes_knowledge")
 
 recipe_schema = {
     "type": "object",
@@ -97,6 +101,14 @@ class SaveRequest(BaseModel):
     recipe_data: Dict[str, Any]
 
 
+for model in client.models.list():
+    # Ищем модели, которые поддерживают метод embedContent
+    if model.supported_actions and "embedContent" in model.supported_actions:
+        print(model.name)
+    # print(model.name)
+    # print(model.supported_actions)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     conn = sqlite3.connect(DB_NAME)
@@ -129,6 +141,42 @@ app.add_middleware(
 @app.post("/api/recipes/generate")
 async def generate_recipe(req: GenerateRequest):
     try:
+        embed_response = client.models.embed_content(
+            model="gemini-embedding-001", contents=req.query
+        )
+        query_vector = embed_response.embeddings[0].values  # type: ignore
+
+        results = collection.query(
+            query_embeddings=[query_vector],  # type: ignore
+            n_results=2,
+        )
+
+        retrieved_context = "\n\n".join(results["documents"][0])  # type: ignore
+
+        print("\n=== ЧТО ДОСТАЛИ ИЗ БАЗЫ (RAG КОНТЕКСТ) ===")
+        print(retrieved_context)
+        print("==========================================\n")
+
+        rag_prompt = f"""
+        Запрос пользователя: {req.query}
+        
+        Вот рецепты из нашей базы знаний:
+        {retrieved_context}
+        
+        Твоя задача:
+        1. Выбери наиболее подходящий рецепт из предоставленной базы знаний.
+        2. Сформируй ответ строго на основе этого рецепта в нужном JSON формате.
+        3. Если в базе знаний нет подходящего ответа, адаптируй ближайший рецепт из базы, но не выдумывай совершенно новые блюда.
+        """
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash", contents=rag_prompt, config=generation_config
+        )
+        if not response.text:
+            raise HTTPException(status_code=500, detail="Модель вернула пустой ответ.")
+
+        return json.loads(response.text)
+        #
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=f"Запрос: {req.query}",
