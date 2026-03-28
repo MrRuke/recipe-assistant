@@ -1,7 +1,8 @@
 import threading
-import uvicorn
-import webbrowser
 import time
+import webbrowser
+
+import uvicorn
 
 from main import app
 
