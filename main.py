@@ -192,6 +192,21 @@ async def generate_recipe(req: GenerateRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/api/recipes/catalog")
+async def get_catalog():
+    """Отдает список всех рецептов из оглавления."""
+    catalog_path = "catalog.json"
+    if not os.path.exists(catalog_path):
+        return {"catalog": []}
+
+    try:
+        with open(catalog_path, "r", encoding="utf-8") as f:
+            catalog = json.load(f)
+        return {"catalog": catalog}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка чтения каталога: {e}")
+
+
 @app.post("/api/recipes/refine")
 async def refine_recipe(req: RefineRequest):
     try:

@@ -19,9 +19,6 @@ if __name__ == "__main__":
 
     time.sleep(1.5)
 
-    print("Открываю интерфейс в браузере...")
-    webbrowser.open("http://127.0.0.1:8000")
-
     try:
         print("Сервер работает. Для остановки нажми Ctrl+C в этой консоли.")
         while True:

@@ -64,8 +64,6 @@ def embed_and_store_pdf(file_path):
     print(f"Читаю PDF файл: {file_path}...")
     full_text = extract_text_from_pdf(file_path)
 
-    # 3. Умная нарезка (Chunking)
-    # Разбиваем текст по абзацам и склеиваем в блоки примерно по 800 символов
     raw_paragraphs = full_text.split("\n\n")
     chunks = []
     current_chunk = ""
@@ -80,14 +78,12 @@ def embed_and_store_pdf(file_path):
     if current_chunk:
         chunks.append(current_chunk.strip())
 
-    # Убираем слишком короткие куски (мусор вроде номеров страниц)
     chunks = [c for c in chunks if len(c) > 50]
 
     print(
         f"Текст извлечен и разбит на {len(chunks)} фрагментов. Начинаю векторизацию..."
     )
 
-    # 4. Векторизация и сохранение
     for i, chunk in enumerate(chunks):
         try:
             response = client.models.embed_content(
