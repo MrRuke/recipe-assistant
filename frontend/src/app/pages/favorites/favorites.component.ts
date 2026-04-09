@@ -31,7 +31,6 @@ export class FavoritesComponent {
         this.recipeService.getFavorites().subscribe({
             next: (res) => {
                 this.favorites = res.favorites;
-                console.log('res', res.favorites);
                 this.cdr.detectChanges();
             },
             error: (err) => console.error(err)

@@ -44,9 +44,8 @@ export class GeneratorComponent {
                 this.cdr.detectChanges();
             },
             error: (err) => {
-                console.error('Ошибка генерации:', err);
+                console.error('Error:', err);
                 this.isLoading.set(false);
-                alert('Произошла ошибка при обращении к API.');
             }
         });
     }
@@ -63,7 +62,7 @@ export class GeneratorComponent {
                 this.isLoading.set(false);
             },
             error: (err) => {
-                console.error('Ошибка обновления:', err);
+                console.error('Error:', err);
                 this.isLoading.set(false);
             }
         });
@@ -75,10 +74,10 @@ export class GeneratorComponent {
         this.recipeService.saveRecipe(this.originalQuery()!, this.currentRecipe()!).subscribe({
             next: () => {
                 this.isSaved.set(true);
-                alert('Рецепт успешно сохранен в Избранное!');
+                alert('Saved!');
             },
             error: (err) => {
-                console.error('Ошибка сохранения:', err);
+                console.error('Error:', err);
             }
         });
     }

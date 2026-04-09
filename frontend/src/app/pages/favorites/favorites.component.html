@@ -1,16 +1,16 @@
 @if(selectedFavorite) {
 <div class="recipe-card">
-    <button class="back-btn" (click)="closeFavoriteDetails()">🔙 Назад к списку</button>
+    <button class="back-btn" (click)="closeFavoriteDetails()">Go back</button>
 
     <app-card [recipe]="selectedFavorite"></app-card>
 </div>
 } @else {
 <div>
-    <h2 style="text-align: center;">Сохраненные рецепты</h2>
+    <h2 style="text-align: center;">Saved recipes</h2>
 
     @if(favorites.length === 0) {
     <p style="text-align: center; color: #7f8c8d;">
-        У вас пока нет сохраненных рецептов.
+        You do not have saved recipes
     </p>
     }
 
@@ -20,12 +20,12 @@
             <h3>{{ fav.title }}</h3>
             <p class="description">{{ fav.recipe_data.description }}</p>
             <div class="macros-mini">
-                <span class="badge calories">🔥 {{ fav.recipe_data.macros.calories }} ккал</span>
-                <span class="badge mini-macro">Б: {{ fav.recipe_data.macros.protein_g }}</span>
-                <span class="badge mini-macro">Ж: {{ fav.recipe_data.macros.fat_g }}</span>
-                <span class="badge mini-macro">У: {{ fav.recipe_data.macros.carbs_g }}</span>
+                <span class="badge calories">{{ fav.recipe_data.macros.calories }} kcal</span>
+                <span class="badge mini-macro">Protein: {{ fav.recipe_data.macros.protein_g }}</span>
+                <span class="badge mini-macro">Fat: {{ fav.recipe_data.macros.fat_g }}</span>
+                <span class="badge mini-macro">Carbs: {{ fav.recipe_data.macros.carbs_g }}</span>
             </div>
-            <button class="view-btn" (click)="viewFavoriteDetails(fav.recipe_data)">Посмотреть рецепт</button>
+            <button class="view-btn" (click)="viewFavoriteDetails(fav.recipe_data)">Open details</button>
         </div>
         }
     </div>

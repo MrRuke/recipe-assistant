@@ -1,16 +1,16 @@
 <div class="search-box">
     <input type="text" [(ngModel)]="searchQuery"
-        placeholder="Какой рецепт нужен? (например: ужин с курицей до 400 ккал)" [disabled]="isLoading()">
+        placeholder="What recipe do you need? (for example: a chicken dinner under 400 kcal)" [disabled]="isLoading()">
 
     <button (click)="generateRecipe()" [disabled]="isLoading() || !searchQuery()">
-        {{ isLoading() ? 'Генерирую...' : 'Создать рецепт' }}
+        {{ isLoading() ? 'Generating...' : 'Create recipe' }}
     </button>
 </div>
 
 
 @if (isLoading()) {
 <div class="loading">
-    <p>⏳ Идет магия ИИ, подождите пару секунд...</p>
+    <p>Generating...</p>
 </div>
 }
 
@@ -20,18 +20,18 @@
 <app-card [recipe]="current">
     @if (revisionsLeft() > 0 && !isSaved()) {
     <div class="refine-box">
-        <p>Осталось правок: <strong>{{ revisionsLeft() }}</strong></p>
+        <p>Edits remaining: <strong>{{ revisionsLeft() }}</strong></p>
 
         <input type="text" [(ngModel)]="refinementQuery"
-            placeholder="Что изменить? (например: замени курицу на индейку)">
+            placeholder="What would you change? (For example: replace chicken with turkey)">
 
-        <button (click)="refineRecipe()" [disabled]="!refinementQuery()">Обновить рецепт</button>
+        <button (click)="refineRecipe()" [disabled]="!refinementQuery()">Update recipe</button>
     </div>
     }
 
     <div class="actions">
         <button class="save-btn" (click)="saveRecipe()" [disabled]="isSaved()">
-            {{ isSaved() ? '✅ Сохранено в БД' : '💾 Сохранить в Избранное' }}
+            {{ isSaved() ? 'Saved' : 'Save' }}
         </button>
     </div>
 </app-card>

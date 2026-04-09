@@ -1,19 +1,19 @@
 @let cat = catalog();
 @if (cat.length > 0) {
 <div class="catalog-section">
-    <h3>📖 Рецепты из базы знаний</h3>
+    <h3>Recipes from database:</h3>
     <div class="catalog-tags">
 
-        @for (item of cat; track $index) {
-        <div>
-            <h3>{{ item.groupName }} </h3>
-
-
-            @for (value of item.values; track $index) {
-            <button class="catalog-tag">
-                {{ value}}
-            </button>
-            }
+        @for (group of cat; track $index) {
+        <div class="catalog-group">
+            <h4 class="group-title">{{ group.groupName }}</h4>
+            <div class="catalog-tags">
+                @for (recipeName of group.values; track $index) {
+                <button class="catalog-tag">
+                    {{ recipeName }}
+                </button>
+                }
+            </div>
         </div>
         }
     </div>

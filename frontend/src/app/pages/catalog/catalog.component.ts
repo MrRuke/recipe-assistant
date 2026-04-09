@@ -15,11 +15,10 @@ export class CatalogComponent {
         this.loadCatalog();
     }
 
-    // Запрашиваем список рецептов с бэкенда
     loadCatalog() {
         this.recipeService.getCatalog().subscribe({
             next: (res) => this.catalog.set(res.catalog),
-            error: (err) => console.error('Ошибка загрузки каталога:', err)
+            error: (err) => console.error('Error:', err)
         });
     }
 }
