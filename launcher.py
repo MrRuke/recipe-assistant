@@ -9,7 +9,7 @@ def run_server():
 
 
 if __name__ == "__main__":
-    print("Запуск сервера рецептов...")
+    print("Running...")
 
     server_thread = threading.Thread(target=run_server, daemon=True)
     server_thread.start()
@@ -17,8 +17,8 @@ if __name__ == "__main__":
     time.sleep(1.5)
 
     try:
-        print("Сервер работает. Для остановки нажми Ctrl+C в этой консоли.")
+        print("Server works. To stop use Ctrl+C.")
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("\nОстановка сервера...")
+        print("\nStopping...")

@@ -11,7 +11,7 @@ api_key = os.getenv("GEMINI_API_KEY")
 client = Client(api_key=api_key)
 
 BOOKS_TOC = {
-    "book1.pdf": [4, 5, 6],
+    "data/book1.pdf": [4, 5, 6],
 }
 
 
@@ -61,23 +61,38 @@ def generate_catalog_json(text):
 
 
 if __name__ == "__main__":
-    master_catalog = []
+    all_entries = []
     for pdf_file, toc_pages in BOOKS_TOC.items():
         print(f"\n🔍 Extracting recipes from the table of contents: {pdf_file}")
         try:
             toc_text = extract_toc_text(pdf_file, toc_pages)
             catalog_list = generate_catalog_json(toc_text)
-            master_catalog.extend(catalog_list)
-            print(f"Added {len(catalog_list)} recipes from this book.")
+            all_entries.extend(catalog_list)
+            print(f"Added {len(catalog_list)} groups from this book.")
         except Exception as e:
             print(f"❌ Error while processing {pdf_file}: {e}")
 
-    master_catalog = list(set(master_catalog))
-    master_catalog.sort()
+    grouped_catalog = {}
+
+    for entry in all_entries:
+        group_name = entry.get("groupName", "Разное")
+        recipe_values = entry.get("values", [])
+
+        if group_name not in grouped_catalog:
+            grouped_catalog[group_name] = set()
+
+        for recipe in recipe_values:
+            grouped_catalog[group_name].add(recipe)
+
+    master_catalog = []
+    for name in sorted(grouped_catalog.keys()):
+        master_catalog.append(
+            {"groupName": name, "values": sorted(list(grouped_catalog[name]))}
+        )
 
     with open("catalog.json", "w", encoding="utf-8") as f:
         json.dump(master_catalog, f, ensure_ascii=False, indent=4)
 
     print(
-        f"\n✅ Done! A total of {len(master_catalog)} unique recipes have been collected from all books. Saved in catalog.json"
+        f"\n✅ Done! A total of {len(master_catalog)} unique groups have been collected from all books. Saved in catalog.json"
     )
