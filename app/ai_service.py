@@ -12,8 +12,6 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 client = Client(api_key=GEMINI_API_KEY)
 
-system_instruction = "Ты профессиональный диетолог. Составляй и корректируй ПП-рецепты по запросу пользователя. Обязательно возвращай ответ строго в требуемом JSON формате."
-
 gemini_recipe_schema = {
     "type": "object",
     "properties": {
@@ -56,7 +54,6 @@ gemini_recipe_schema = {
 }
 
 generation_config = types.GenerateContentConfig(
-    system_instruction=system_instruction,
     response_mime_type="application/json",
     response_schema=gemini_recipe_schema,
     temperature=0.4,
@@ -64,7 +61,7 @@ generation_config = types.GenerateContentConfig(
 
 
 def generate_recipe_from_ai(query: str) -> dict:
-    """Ищет контекст в базе и генерирует рецепт."""
+    """Searches the context in the database and generates a recipe."""
     try:
         embed_response = client.models.embed_content(
             model=EMBEDDING_MODEL, contents=query
@@ -73,27 +70,26 @@ def generate_recipe_from_ai(query: str) -> dict:
 
         results = knowledge_collection.query(
             query_embeddings=[query_vector],  # type: ignore
-            n_results=2,  # type: ignore
+            n_results=2,
         )
 
         retrieved_context = ""
         if results["documents"] and results["documents"][0]:
             retrieved_context = "\n\n".join(results["documents"][0])
 
-        print("\n=== НАЙДЕННЫЙ КОНТЕКСТ ДЛЯ ИИ ===")
-        print(retrieved_context[:200] + "...\n=================================\n")
-
         rag_prompt = f"""
-        Ты — строгий кулинарный ассистент. Твоя задача — возвращать рецепты на основе предоставленного текста (Базы знаний).
-        База знаний:
+        You are a professional culinary assistant. Your goal is to provide high-quality recipes based on the provided Knowledge Base context.
+        
+        Knowledge Base:
         {retrieved_context}
         
-        Запрос пользователя: {query}
+        User Query: {query}
         
-        АБСОЛЮТНЫЕ ПРАВИЛА:
-        1. В первую очередь используй даныне из базы знаний
-        2. Если в базе знаний нет ничего релевантного запросу, то тогда дополни информацию из своей базы знани
-        3. Если рецепт есть в базе знаний, но не все соответствует формату, дополни пропуски
+        ABSOLUTE RULES:
+        1. PRIORITIZE KNOWLEDGE BASE: Always use the data from the Knowledge Base as your primary source.
+        2. FALLBACK TO INTERNAL KNOWLEDGE: If the Knowledge Base contains no information relevant to the user's query, use your own internal training data to provide a high-quality, relevant recipe.
+        3. SUPPLEMENT MISSING DETAILS: If a recipe is found in the Knowledge Base but is missing required details (such as macronutrients, prep time, or specific steps) needed to complete the JSON schema, supplement the missing information using your internal knowledge.
+        4. LANGUAGE: Always respond in user query language.
         """
 
         response = client.models.generate_content(
@@ -104,20 +100,23 @@ def generate_recipe_from_ai(query: str) -> dict:
 
         return json.loads(response.text)  # type: ignore
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка генерации: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Update error: {str(e)}")
 
 
 def refine_recipe_with_ai(current_recipe: dict, refinement: str) -> dict:
-    """Вносит правки в существующий рецепт."""
+    """Makes changes to an existing recipe."""
     try:
         refine_prompt = f"""
-        Вот текущий рецепт (в формате JSON):
+        Current Recipe (JSON format):
         {json.dumps(current_recipe, ensure_ascii=False)}
 
-        Пожелание пользователя по изменению: "{refinement}"
+        User's requested modification: "{refinement}"
 
-        Измени рецепт с учетом пожелания. Если меняются ингредиенты, пересчитай КБЖУ.
-        Верни обновленный рецепт строго в JSON формате.
+        Instructions:
+        1. Update the recipe according to the user's request while maintaining the original JSON structure.
+        2. If ingredients are added, removed, or their amounts are changed, you MUST recalculate the macronutrients (calories, protein, fats, and carbohydrates) to ensure accuracy.
+        3. Ensure that all text content (title, description, steps, etc.) remains in user query language.
+        4. Return the result strictly as a valid JSON object. Do not include any conversational text or markdown formatting.
         """
 
         response = client.models.generate_content(
@@ -125,4 +124,4 @@ def refine_recipe_with_ai(current_recipe: dict, refinement: str) -> dict:
         )
         return json.loads(response.text)  # type: ignore
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка обновления: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Update error: {str(e)}")

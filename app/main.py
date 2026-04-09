@@ -18,4 +18,4 @@ app.include_router(recipes.router)
 
 @app.get("/")
 async def root():
-    return {"message": "API работает"}
+    return {"message": "API works"}

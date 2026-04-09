@@ -23,6 +23,6 @@ export interface Recipe {
 export interface SavedRecipe {
     id: number;
     title: string;
-    recipe_data: Recipe; // Внутри лежит наш обычный рецепт
+    recipe_data: Recipe;
     created_at: string;
 }

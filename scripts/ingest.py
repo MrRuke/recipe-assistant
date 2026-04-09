@@ -19,7 +19,7 @@ chroma_client = chromadb.PersistentClient(path=CHROMA_DB_PATH)
 
 try:
     # chroma_client.delete_collection("pp_recipes_knowledge")
-    print("Старая база очищена.")
+    print("The old base has been cleared..")
 except ValueError:
     pass
 
@@ -27,7 +27,7 @@ collection = chroma_client.get_or_create_collection(name="pp_recipes_knowledge")
 
 
 def embed_and_store(file_path):
-    print(f"Читаю файл {file_path}...")
+    print(f"Reading file {file_path}...")
 
     with open(file_path, "r", encoding="utf-8") as f:
         text = f.read()
@@ -35,7 +35,7 @@ def embed_and_store(file_path):
     chunks = text.split("\n\n")
     chunks = [c.strip() for c in chunks if len(c.strip()) > 50]
 
-    print(f"Найдено {len(chunks)} фрагментов. Начинаю векторизацию...")
+    print(f"{len(chunks)} fragments found. Starting vectorization...")
 
     for i, chunk in enumerate(chunks):
         response = client.models.embed_content(
@@ -48,13 +48,13 @@ def embed_and_store(file_path):
             documents=[chunk],
             ids=[f"recipe_chunk_{i}"],
         )
-        print(f"Сохранен фрагмент {i + 1}/{len(chunks)}")
+        print(f"Fragment saved {i + 1}/{len(chunks)}")
 
-    print("✅ База знаний успешно создана!")
+    print("✅ Knowledge base successfully created!")
 
 
 def extract_text_from_pdf(pdf_path):
-    """Читает PDF и склеивает текст со всех страниц."""
+    """Reads PDF and merges text from all pages."""
     reader = PdfReader(pdf_path)
     text = ""
     for page in reader.pages:
@@ -65,12 +65,11 @@ def extract_text_from_pdf(pdf_path):
 
 
 def embed_and_store_pdf(filename):
-    # Ищем книгу в папке data/
     file_path = os.path.join(DATA_DIR, filename)
-    print(f"\n📚 Начинаю обработку книги: {file_path}")
+    print(f"\nI'm starting to process the book: {file_path}")
 
     if not os.path.exists(file_path):
-        print(f"❌ ОШИБКА: Файл {filename} не найден в папке data/!")
+        print(f"❌ ERROR: File {filename} not found in data/!")
         return
 
     full_text = extract_text_from_pdf(file_path)
@@ -89,7 +88,7 @@ def embed_and_store_pdf(filename):
         chunks.append(current_chunk.strip())
 
     chunks = [c for c in chunks if len(c) > 50]
-    print(f"Разбито на {len(chunks)} фрагментов. Векторизую...")
+    print(f"Split into {len(chunks)} fragments. Vectorizing...")
 
     for i, chunk in enumerate(chunks):
         try:
@@ -108,9 +107,9 @@ def embed_and_store_pdf(filename):
                 ids=[unique_id],
             )
         except Exception as e:
-            print(f"Ошибка на фрагменте {i + 1}: {e}")
+            print(f"Error on fragment {i + 1}: {e}")
 
-    print(f"✅ Книга '{filename}' успешно загружена в базу!")
+    print(f"✅ Book '{filename}' successfully uploaded to the database!")
 
 
 if __name__ == "__main__":
@@ -118,5 +117,3 @@ if __name__ == "__main__":
 
     for book in BOOKS:
         embed_and_store_pdf(book)
-
-    print("\n🎉 База знаний успешно пересобрана на новом месте!")
