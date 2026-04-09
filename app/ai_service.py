@@ -89,7 +89,7 @@ def generate_recipe_from_ai(query: str) -> dict:
         1. PRIORITIZE KNOWLEDGE BASE: Always use the data from the Knowledge Base as your primary source.
         2. FALLBACK TO INTERNAL KNOWLEDGE: If the Knowledge Base contains no information relevant to the user's query, use your own internal training data to provide a high-quality, relevant recipe.
         3. SUPPLEMENT MISSING DETAILS: If a recipe is found in the Knowledge Base but is missing required details (such as macronutrients, prep time, or specific steps) needed to complete the JSON schema, supplement the missing information using your internal knowledge.
-        4. LANGUAGE: Always respond in user query language.
+        4. LANGUAGE: Always respond in user query language. If user request in English, then response should be in English too.
         """
 
         response = client.models.generate_content(

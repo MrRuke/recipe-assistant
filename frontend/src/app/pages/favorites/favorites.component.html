@@ -17,13 +17,13 @@
     <div class="favorites-grid">
         @for (fav of favorites; track $index) {
         <div class="fav-card">
-            <h3>{{ fav.title }}</h3>
+            <h3>{{ fav.recipe_data.title }}</h3>
             <p class="description">{{ fav.recipe_data.description }}</p>
             <div class="macros-mini">
                 <span class="badge calories">{{ fav.recipe_data.macros.calories }} kcal</span>
-                <span class="badge mini-macro">Protein: {{ fav.recipe_data.macros.protein_g }}</span>
-                <span class="badge mini-macro">Fat: {{ fav.recipe_data.macros.fat_g }}</span>
-                <span class="badge mini-macro">Carbs: {{ fav.recipe_data.macros.carbs_g }}</span>
+                <span class="badge mini-macro">Protein: {{ fav.recipe_data.macros.protein_g }}g</span>
+                <span class="badge mini-macro">Fat: {{ fav.recipe_data.macros.fat_g }}g</span>
+                <span class="badge mini-macro">Carbs: {{ fav.recipe_data.macros.carbs_g }}g</span>
             </div>
             <button class="view-btn" (click)="viewFavoriteDetails(fav.recipe_data)">Open details</button>
         </div>

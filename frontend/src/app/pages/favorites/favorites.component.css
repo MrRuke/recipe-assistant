@@ -32,6 +32,10 @@
   text-overflow: ellipsis;
 }
 
+.badge.calories {
+  width: 100%;
+}
+
 .macros-mini {
   display: flex;
   flex-wrap: wrap;

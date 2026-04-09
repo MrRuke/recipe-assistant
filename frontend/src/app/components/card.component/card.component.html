@@ -12,16 +12,16 @@
     </div>
 
     <div class="macros-box">
-        <div><strong>Белки:</strong> {{ current.macros.protein_g }}г</div>
+        <div><strong>Protein:</strong> {{ current.macros.protein_g }}g</div>
 
-        <div><strong>Жиры:</strong> {{ current.macros.fat_g }}г</div>
+        <div><strong>Fat:</strong> {{ current.macros.fat_g }}g</div>
 
-        <div><strong>Углеводы:</strong> {{ current.macros.carbs_g }}г</div>
+        <div><strong>Carbs:</strong> {{ current.macros.carbs_g }}g</div>
     </div>
 
     <div class="recipe-content">
         <div class="column">
-            <h3>🛒 Ингредиенты</h3>
+            <h3>🛒 Ingredients</h3>
             <ul>
                 @for (item of current.ingredients; track $index) {
                 <li>
@@ -30,7 +30,7 @@
                 }
             </ul>
 
-            <h3>🔄 Возможные замены</h3>
+            <h3>🔄 Substitutions</h3>
             <ul class="substitutions">
 
                 @for (sub of current.substitutions; track $index) {
@@ -40,7 +40,7 @@
         </div>
 
         <div class="column">
-            <h3>👨‍🍳 Как готовить</h3>
+            <h3>👨‍🍳 How to cook</h3>
             <ol>
                 @for (step of current.steps; track $index) {
                 <li>{{ step }}</li>
