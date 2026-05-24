@@ -1,5 +1,10 @@
 <div class="container">
-    <h1>AI Recipe Assistant</h1>
+    <div class="header-row">
+        <h1>AI Recipe Assistant</h1>
+        <button class="theme-toggle" (click)="toggleTheme()" aria-label="Toggle theme">
+            {{ isDark() ? '☀️' : '🌙' }}
+        </button>
+    </div>
 
     <div class="nav-tabs">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-btn">

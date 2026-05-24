@@ -1,16 +1,59 @@
 :root {
-  /* Elegant Obsidian Color Palette */
+  /* ========================================== */
+  /* LIGHT THEME (DEFAULT)                      */
+  /* ========================================== */
+  --bg-dark: #f5f7fa;
+  --bg-gradient: linear-gradient(180deg, #fcfdfe 0%, #edf1f7 100%);
+  --panel-bg: rgba(255, 255, 255, 0.8);
+  --panel-border: rgba(0, 0, 0, 0.07);
+  --panel-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  
+  --input-bg: rgba(0, 0, 0, 0.02);
+  
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  /* Accents */
+  --accent-emerald: #10b981;
+  --accent-emerald-glow: rgba(16, 185, 129, 0.15);
+  --accent-emerald-dark: #047857;
+  
+  --accent-blue: #2563eb;
+  --accent-blue-glow: rgba(37, 99, 235, 0.15);
+  
+  --accent-amber: #d97706;
+  --accent-amber-glow: rgba(217, 119, 6, 0.12);
+
+  --accent-purple: #7c3aed;
+  --accent-purple-glow: rgba(124, 58, 237, 0.12);
+
+  --danger: #dc2626;
+  --danger-glow: rgba(220, 38, 38, 0.12);
+
+  /* Helper Glow Color for Radial Gradients */
+  --glow-color: rgba(37, 99, 235, 0.05);
+
+  --font-header: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body.dark-theme {
+  /* ========================================== */
+  /* DARK THEME OVERRIDES                       */
+  /* ========================================== */
   --bg-dark: #080b11;
   --bg-gradient: radial-gradient(circle at 50% 0%, #151e33 0%, #080b11 70%);
   --panel-bg: rgba(17, 24, 39, 0.7);
   --panel-border: rgba(255, 255, 255, 0.08);
-  --panel-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+  --panel-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  
+  --input-bg: rgba(255, 255, 255, 0.02);
   
   --text-primary: #f3f4f6;
   --text-secondary: #9ca3af;
   --text-muted: #6b7280;
 
-  /* Accents */
   --accent-emerald: #10b981;
   --accent-emerald-glow: rgba(16, 185, 129, 0.2);
   --accent-emerald-dark: #059669;
@@ -19,16 +62,15 @@
   --accent-blue-glow: rgba(59, 130, 246, 0.25);
   
   --accent-amber: #f59e0b;
-  --accent-amber-glow: rgba(245, 158, 11, 0.2);
+  --accent-amber-glow: rgba(245, 158, 11, 0.25);
 
   --accent-purple: #8b5cf6;
-  --accent-purple-glow: rgba(139, 92, 246, 0.2);
+  --accent-purple-glow: rgba(139, 92, 246, 0.25);
 
   --danger: #ef4444;
-  --danger-glow: rgba(239, 68, 68, 0.2);
+  --danger-glow: rgba(239, 68, 68, 0.25);
 
-  --font-header: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --glow-color: rgba(59, 130, 246, 0.08);
 }
 
 /* Global Reset & Scrollbars */
@@ -36,7 +78,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 
 body {
@@ -58,15 +100,24 @@ body {
 }
 
 ::-webkit-scrollbar-track {
+  background: rgba(8, 11, 17, 0.05);
+}
+body.dark-theme ::-webkit-scrollbar-track {
   background: rgba(8, 11, 17, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 4px;
+}
+body.dark-theme ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
@@ -101,11 +152,15 @@ button:active:not(:disabled) {
 }
 
 button:disabled {
-  background: #1f2937;
+  background: rgba(0, 0, 0, 0.05);
   color: var(--text-muted);
   cursor: not-allowed;
   box-shadow: none;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--panel-border);
+}
+body.dark-theme button:disabled {
+  background: #1f2937;
+  color: var(--text-muted);
 }
 
 /* Global Badges */
@@ -117,5 +172,8 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  border: 1px solid transparent;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+body.dark-theme .badge {
+  border-color: transparent;
 }

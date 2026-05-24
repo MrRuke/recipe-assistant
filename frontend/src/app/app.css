@@ -4,18 +4,63 @@
   padding: 0 20px;
 }
 
+.header-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 35px;
+  width: 100%;
+}
+
 h1 {
   font-family: var(--font-header);
   font-size: 2.8rem;
   font-weight: 800;
   text-align: center;
-  margin-bottom: 35px;
-  background: linear-gradient(135deg, #ffffff 30%, #3b82f6 70%, #10b981 100%);
+  background: linear-gradient(135deg, #0f172a 30%, #2563eb 70%, #10b981 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -0.5px;
+}
+
+body.dark-theme h1 {
+  background: linear-gradient(135deg, #ffffff 30%, #3b82f6 70%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+}
+
+.theme-toggle {
+  position: absolute;
+  right: 0;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  color: var(--text-primary);
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--panel-shadow);
+  backdrop-filter: blur(12px);
+  font-size: 1.25rem;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1) rotate(15deg);
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 15px var(--accent-blue-glow);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
 }
 
 .nav-tabs {
@@ -51,11 +96,20 @@ h1 {
 }
 
 .nav-tabs .nav-btn:hover {
-  color: #ffffff;
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.02);
+}
+body.dark-theme .nav-tabs .nav-btn:hover {
   background: rgba(255, 255, 255, 0.04);
 }
 
 .nav-tabs .nav-btn.active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+  color: var(--accent-blue);
+  border-color: rgba(37, 99, 235, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+body.dark-theme .nav-tabs .nav-btn.active {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.08);

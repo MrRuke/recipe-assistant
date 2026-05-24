@@ -38,11 +38,11 @@
 input {
   flex: 1;
   padding: 14px 20px;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--input-bg);
   border: 1px solid var(--panel-border);
   border-radius: 12px;
   font-size: 1rem;
-  color: #ffffff;
+  color: var(--text-primary);
   outline: none;
   font-family: var(--font-body);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);

@@ -29,7 +29,7 @@
   font-family: var(--font-header);
   font-size: 1.3rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0 0 10px 0;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -85,9 +85,9 @@
 }
 
 .back-btn {
-  background: rgba(255, 255, 255, 0.02);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--panel-border);
   margin-bottom: 25px;
   font-family: var(--font-header);
   border-radius: 10px;
