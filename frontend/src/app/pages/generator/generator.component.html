@@ -10,7 +10,8 @@
 
 @if (isLoading()) {
 <div class="loading">
-    <p>Generating...</p>
+    <div class="loader-spinner"></div>
+    <p>Generating recipe...</p>
 </div>
 }
 
@@ -22,10 +23,12 @@
     <div class="refine-box">
         <p>Edits remaining: <strong>{{ revisionsLeft() }}</strong></p>
 
-        <input type="text" [(ngModel)]="refinementQuery"
-            placeholder="What would you change? (For example: replace chicken with turkey)">
+        <div class="refine-input-group">
+            <input type="text" [(ngModel)]="refinementQuery"
+                placeholder="What would you change? (For example: replace chicken with turkey)">
 
-        <button (click)="refineRecipe()" [disabled]="!refinementQuery()">Update recipe</button>
+            <button (click)="refineRecipe()" [disabled]="!refinementQuery()">Update recipe</button>
+        </div>
     </div>
     }
 
