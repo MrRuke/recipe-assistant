@@ -1,9 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ToastComponent } from './components/toast.component/toast.component';
 
 @Component({
     selector: 'app-root',
-    imports: [RouterModule],
+    imports: [RouterModule, ToastComponent],
     templateUrl: './app.html',
     styleUrl: './app.css'
 })

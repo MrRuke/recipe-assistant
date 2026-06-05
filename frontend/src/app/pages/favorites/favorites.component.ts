@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RecipeService } from '../../api/api.service';
 import { Recipe, SavedRecipe } from '../../api/models/all.i';
 import { CardComponent } from '../../components/card.component/card.component';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-favorites',
@@ -19,6 +20,7 @@ import { CardComponent } from '../../components/card.component/card.component';
 export class FavoritesComponent {
     private recipeService = inject(RecipeService);
     private cdr = inject(ChangeDetectorRef);
+        private toastService = inject(ToastService);
 
     favorites: SavedRecipe[] = [];
     selectedFavorite: Recipe | null = null;
@@ -34,8 +36,12 @@ export class FavoritesComponent {
             next: (res) => {
                 this.favorites = res.favorites;
                 this.cdr.detectChanges();
+                this.toastService.show('Test');
             },
-            error: (err) => console.error(err)
+            error: (err) => {
+                console.error(err);
+                this.toastService.show('Test');
+            }
         });
     }
 

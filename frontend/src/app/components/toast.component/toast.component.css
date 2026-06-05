@@ -1,0 +1,12 @@
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--panel-bg);
+  color: var(--text-primary);
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: var(--panel-shadow);
+  animation: fadeIn 0.3s ease, slideUp 0.3s ease;
+  z-index: 1000;
+}

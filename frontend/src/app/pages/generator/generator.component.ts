@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RecipeService } from '../../api/api.service';
 import { Recipe } from '../../api/models/all.i';
 import { CardComponent } from '../../components/card.component/card.component';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-generator',
@@ -28,27 +29,31 @@ export class GeneratorComponent {
 
     private originalQuery = signal<string | undefined>(undefined);
 
-    protected generateRecipe(): void {
-        if (!this.searchQuery().trim()) return;
+    private toastService = inject(ToastService);
 
-        this.isLoading.set(true);
-        this.currentRecipe.set(null);
-        this.isSaved.set(false);
-        this.revisionsLeft.set(2);
-        this.originalQuery.set(this.searchQuery());
+  protected generateRecipe(): void {
+    if (!this.searchQuery().trim()) return;
+    this.toastService.show('Generating recipe...');
+    this.isLoading.set(true);
+    this.currentRecipe.set(null);
+    this.isSaved.set(false);
+    this.revisionsLeft.set(2);
+    this.originalQuery.set(this.searchQuery());
 
-        this.recipeService.generateRecipe(this.searchQuery()).subscribe({
-            next: (recipe) => {
-                this.currentRecipe.set(recipe);
-                this.isLoading.set(false);
-                this.cdr.detectChanges();
-            },
-            error: (err) => {
-                console.error('Error:', err);
-                this.isLoading.set(false);
-            }
-        });
-    }
+    this.recipeService.generateRecipe(this.searchQuery()).subscribe({
+      next: (recipe) => {
+        this.currentRecipe.set(recipe);
+        this.isLoading.set(false);
+        this.cdr.detectChanges();
+        this.toastService.show('Recipe generated!');
+      },
+      error: (err) => {
+        console.error('Error:', err);
+        this.isLoading.set(false);
+        this.toastService.show('Error generating recipe');
+      }
+    });
+  }
 
     protected refineRecipe(): void {
         if (!this.refinementQuery().trim() || !this.currentRecipe() || this.revisionsLeft() <= 0) return;
