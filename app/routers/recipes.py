@@ -59,6 +59,17 @@ async def get_favorites():
         raise HTTPException(status_code=500, detail=f"Ошибка чтения БД: {str(e)}")
 
 
+@router.delete("/favorites/{recipe_id}")
+async def delete_favorite(recipe_id: int):
+    try:
+        cursor = sqlite_conn.cursor()
+        cursor.execute("DELETE FROM saved_recipes WHERE id = ?", (recipe_id,))
+        sqlite_conn.commit()
+        return {"status": "success", "message": "Рецепт удален из избранного"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка БД: {str(e)}")
+
+
 @router.get("/catalog")
 async def get_catalog():
     if not os.path.exists(CATALOG_PATH):

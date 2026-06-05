@@ -22,6 +22,8 @@ export class FavoritesComponent {
 
     favorites: SavedRecipe[] = [];
     selectedFavorite: Recipe | null = null;
+    showDeleteModal = false;
+    recipeToDelete: SavedRecipe | null = null;
 
     ngOnInit() {
         this.loadFavorites();
@@ -43,5 +45,27 @@ export class FavoritesComponent {
 
     protected closeFavoriteDetails(): void {
         this.selectedFavorite = null;
+    }
+
+    protected confirmDelete(fav: SavedRecipe): void {
+        this.recipeToDelete = fav;
+        this.showDeleteModal = true;
+    }
+
+    protected closeDeleteModal(): void {
+        this.showDeleteModal = false;
+        this.recipeToDelete = null;
+    }
+
+    protected deleteRecipe(): void {
+        if (!this.recipeToDelete) return;
+
+        this.recipeService.deleteFavorite(this.recipeToDelete.id).subscribe({
+            next: () => {
+                this.loadFavorites();
+                this.closeDeleteModal();
+            },
+            error: (err) => console.error(err)
+        });
     }
 }

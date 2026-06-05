@@ -37,6 +37,10 @@ export class RecipeService {
         return this.http.get(`${this.apiUrl}/favorites`);
     }
 
+    deleteFavorite(id: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/favorites/${id}`);
+    }
+
     getCatalog(): Observable<{catalog: Test[]}> {
         return this.http.get<{catalog: Test[]}>(`${this.apiUrl}/catalog`);
     }
