@@ -19,6 +19,7 @@ h1 {
   font-weight: 800;
   text-align: center;
   background: linear-gradient(135deg, #0f172a 30%, #2563eb 70%, #10b981 100%);
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -99,6 +100,7 @@ body.dark-theme h1 {
   color: var(--text-primary);
   background: rgba(0, 0, 0, 0.02);
 }
+
 body.dark-theme .nav-tabs .nav-btn:hover {
   background: rgba(255, 255, 255, 0.04);
 }
@@ -109,6 +111,7 @@ body.dark-theme .nav-tabs .nav-btn:hover {
   border-color: rgba(37, 99, 235, 0.15);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
+
 body.dark-theme .nav-tabs .nav-btn.active {
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
   color: #ffffff;
