@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 from google.genai import Client
 from pypdf import PdfReader
 
+from app.config import DATA_DIR
+
 load_dotenv()
 
 api_key = os.getenv("GEMINI_API_KEY")
@@ -90,6 +92,7 @@ if __name__ == "__main__":
             {"groupName": name, "values": sorted(list(grouped_catalog[name]))}
         )
 
+    target_path = os.path.join(DATA_DIR, "catalog.json")
     with open("catalog.json", "w", encoding="utf-8") as f:
         json.dump(master_catalog, f, ensure_ascii=False, indent=4)
 

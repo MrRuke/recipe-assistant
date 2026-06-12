@@ -11,4 +11,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["python", "launcher.py"]
+CMD python scripts/ingest.py && python scripts/extract_catalog.py && python launcher.py
