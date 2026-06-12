@@ -9,6 +9,8 @@ services:
       - ./data:/app/data
     env_file:
       - .env
+    environment:
+      - PYTHONPATH=/app
     restart: always
 
   frontend:
