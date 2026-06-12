@@ -1,0 +1,6 @@
+.venv/
+frontend/
+.git/
+.ruff_cache/
+__pycache__/
+data/chroma_db/

@@ -12,7 +12,7 @@ export interface Test {
     providedIn: 'root'
 })
 export class RecipeService {
-    private apiUrl = 'http://localhost:8000/api/recipes';
+    private apiUrl = '/api/recipes';
 
     constructor(private http: HttpClient) { }
 
