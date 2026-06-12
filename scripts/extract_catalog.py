@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from google.genai import Client
 from pypdf import PdfReader
 
-from app.config import DATA_DIR
+from ..app.config import DATA_DIR
 
 load_dotenv()
 
