@@ -1,6 +1,7 @@
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = "/app"
 DATA_DIR = os.path.join(BASE_DIR, "data")
 
 CHROMA_DB_PATH = os.path.join(DATA_DIR, "chroma_db")

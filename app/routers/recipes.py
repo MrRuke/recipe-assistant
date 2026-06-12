@@ -72,7 +72,11 @@ async def delete_favorite(recipe_id: int):
 
 @router.get("/catalog")
 async def get_catalog():
+    print(f"\n[CATALOG LOG] Ищу файл каталога по пути: {os.path.abspath(CATALOG_PATH)}", flush=True)
+    file_exists = os.path.exists(CATALOG_PATH)
+    print(f"[CATALOG LOG] Файл существует? -> {file_exists}", flush=True)
     if not os.path.exists(CATALOG_PATH):
+        print("[CATALOG LOG] Предупреждение: Файл не найден, возвращаю пустой список.", flush=True)
         return {"catalog": []}
     try:
         with open(CATALOG_PATH, "r", encoding="utf-8") as f:

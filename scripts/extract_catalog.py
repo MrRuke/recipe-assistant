@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from google.genai import Client
 from pypdf import PdfReader
 
-from app.config import DATA_DIR
+from app.config import CATALOG_PATH
 
 load_dotenv()
 
@@ -92,8 +92,7 @@ if __name__ == "__main__":
             {"groupName": name, "values": sorted(list(grouped_catalog[name]))}
         )
 
-    target_path = os.path.join(DATA_DIR, "catalog.json")
-    with open("catalog.json", "w", encoding="utf-8") as f:
+    with open(CATALOG_PATH, "w", encoding="utf-8") as f:
         json.dump(master_catalog, f, ensure_ascii=False, indent=4)
 
     print(
