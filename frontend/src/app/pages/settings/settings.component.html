@@ -1,0 +1,129 @@
+<div class="settings-page">
+    <div class="settings-header">
+        <div class="settings-icon">⚙️</div>
+        <div class="settings-header-text">
+            <h1>{{ translate('settings.title') }}</h1>
+            <p class="settings-subtitle">{{ translate('settings.subtitle') }}</p>
+        </div>
+    </div>
+
+    <div class="settings-grid">
+        <!-- Physical Parameters Card -->
+        <div class="settings-card">
+            <div class="card-header">
+                <span class="card-icon">📏</span>
+                <h2>{{ translate('settings.physical.title') }}</h2>
+            </div>
+
+            <div class="field-group">
+                <label for="height-input">{{ translate('settings.height.label') }}</label>
+                <div class="input-with-unit">
+                    <input
+                        id="height-input"
+                        type="number"
+                        class="settings-input"
+                        [placeholder]="translate('settings.height.placeholder')"
+                        [(ngModel)]="heightValue"
+                        min="50"
+                        max="300"
+                    />
+                    <span class="unit-badge">{{ translate('settings.height.unit') }}</span>
+                </div>
+                <p class="field-hint">{{ translate('settings.height.hint') }}</p>
+            </div>
+
+            <div class="field-group">
+                <label for="weight-input">{{ translate('settings.weight.label') }}</label>
+                <div class="input-with-unit">
+                    <input
+                        id="weight-input"
+                        type="number"
+                        class="settings-input"
+                        [placeholder]="translate('settings.weight.placeholder')"
+                        [(ngModel)]="weightValue"
+                        min="20"
+                        max="500"
+                    />
+                    <span class="unit-badge">{{ translate('settings.weight.unit') }}</span>
+                </div>
+                <p class="field-hint">{{ translate('settings.weight.hint') }}</p>
+            </div>
+
+            @if (getBMI()) {
+                <div class="bmi-card" [class]="getBMIColor()">
+                    <div class="bmi-label">{{ translate('settings.bmi') }}</div>
+                    <div class="bmi-value">{{ getBMI() }}</div>
+                    <div class="bmi-category">{{ getBMICategory() }}</div>
+                </div>
+            }
+        </div>
+
+        <!-- Goal Card -->
+        <div class="settings-card">
+            <div class="card-header">
+                <span class="card-icon">🎯</span>
+                <h2>{{ translate('settings.goal.title') }}</h2>
+            </div>
+            <p class="card-description">{{ translate('settings.goal.description') }}</p>
+
+            <div class="goal-options">
+                <label class="goal-option" [class.selected]="goalValue === 'lose'">
+                    <input type="radio" name="goal" value="lose" [(ngModel)]="goalValue" />
+                    <div class="goal-content">
+                        <span class="goal-emoji">📉</span>
+                        <div class="goal-text">
+                            <span class="goal-name">{{ translate('settings.goal.lose') }}</span>
+                            <span class="goal-desc">{{ translate('settings.goal.lose.desc') }}</span>
+                        </div>
+                    </div>
+                    <div class="goal-check">✓</div>
+                </label>
+
+                <label class="goal-option" [class.selected]="goalValue === 'maintain'">
+                    <input type="radio" name="goal" value="maintain" [(ngModel)]="goalValue" />
+                    <div class="goal-content">
+                        <span class="goal-emoji">⚖️</span>
+                        <div class="goal-text">
+                            <span class="goal-name">{{ translate('settings.goal.maintain') }}</span>
+                            <span class="goal-desc">{{ translate('settings.goal.maintain.desc') }}</span>
+                        </div>
+                    </div>
+                    <div class="goal-check">✓</div>
+                </label>
+
+                <label class="goal-option" [class.selected]="goalValue === 'gain'">
+                    <input type="radio" name="goal" value="gain" [(ngModel)]="goalValue" />
+                    <div class="goal-content">
+                        <span class="goal-emoji">📈</span>
+                        <div class="goal-text">
+                            <span class="goal-name">{{ translate('settings.goal.gain') }}</span>
+                            <span class="goal-desc">{{ translate('settings.goal.gain.desc') }}</span>
+                        </div>
+                    </div>
+                    <div class="goal-check">✓</div>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Note Banner -->
+    <div class="ai-note">
+        <span class="ai-note-icon">🤖</span>
+        <p>{{ translate('settings.ai.note') }}</p>
+    </div>
+
+    <!-- Save Button -->
+    <div class="settings-actions">
+        <button
+            class="save-btn"
+            [class.saved]="saved()"
+            (click)="onSave()"
+        >
+            @if (saved()) {
+                <span>✓ {{ translate('settings.saved') }}</span>
+            } @else {
+                <span>{{ translate('settings.save') }}</span>
+            }
+        </button>
+    </div>
+</div>

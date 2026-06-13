@@ -1,0 +1,381 @@
+.settings-page {
+    padding: 32px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====================== */
+/* HEADER                 */
+/* ====================== */
+.settings-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.settings-icon {
+    font-size: 2.8rem;
+    line-height: 1;
+    filter: drop-shadow(0 4px 12px rgba(37, 99, 235, 0.3));
+}
+
+.settings-header-text h1 {
+    font-family: var(--font-header);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.settings-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+/* ====================== */
+/* GRID LAYOUT            */
+/* ====================== */
+.settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .settings-grid { grid-template-columns: 1fr; }
+}
+
+/* ====================== */
+/* CARD                   */
+/* ====================== */
+.settings-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: var(--panel-shadow);
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    transition: box-shadow 0.25s ease;
+}
+
+.settings-card:hover {
+    box-shadow: 0 16px 48px rgba(37, 99, 235, 0.1);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--panel-border);
+    padding-bottom: 18px;
+}
+
+.card-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.card-header h2 {
+    font-family: var(--font-header);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.card-description {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    margin-top: -10px;
+    line-height: 1.55;
+}
+
+/* ====================== */
+/* FORM FIELDS            */
+/* ====================== */
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.field-group label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.input-with-unit {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.settings-input {
+    flex: 1;
+    padding: 12px 16px;
+    background: var(--input-bg);
+    border: 1.5px solid var(--panel-border);
+    border-right: none;
+    border-radius: 12px 0 0 12px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.settings-input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 3px var(--accent-blue-glow);
+}
+
+.settings-input::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* Remove number input arrows */
+.settings-input::-webkit-outer-spin-button,
+.settings-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.settings-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.unit-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    border-radius: 0 12px 12px 0;
+    min-width: 52px;
+    box-shadow: 0 4px 12px var(--accent-blue-glow);
+}
+
+.field-hint {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+/* ====================== */
+/* BMI WIDGET             */
+/* ====================== */
+.bmi-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 18px 24px;
+    border-radius: 14px;
+    border: 1.5px solid;
+    animation: fadeInUp 0.3s ease;
+}
+
+.bmi-card.bmi-low {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.3);
+    color: var(--accent-blue);
+}
+.bmi-card.bmi-normal {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: var(--accent-emerald);
+}
+.bmi-card.bmi-high {
+    background: rgba(217, 119, 6, 0.08);
+    border-color: rgba(217, 119, 6, 0.3);
+    color: var(--accent-amber);
+}
+.bmi-card.bmi-very-high {
+    background: rgba(220, 38, 38, 0.08);
+    border-color: rgba(220, 38, 38, 0.3);
+    color: var(--danger);
+}
+
+.bmi-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.75;
+}
+.bmi-value {
+    font-size: 2.4rem;
+    font-weight: 800;
+    font-family: var(--font-header);
+    line-height: 1;
+}
+.bmi-category {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ====================== */
+/* GOAL OPTIONS           */
+/* ====================== */
+.goal-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.goal-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border: 1.5px solid var(--panel-border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--input-bg);
+    position: relative;
+    overflow: hidden;
+}
+
+.goal-option:hover {
+    border-color: var(--accent-blue);
+    background: var(--accent-blue-glow);
+    transform: translateX(4px);
+}
+
+.goal-option.selected {
+    border-color: var(--accent-blue);
+    background: var(--accent-blue-glow);
+    box-shadow: 0 4px 16px var(--accent-blue-glow);
+}
+
+.goal-option input[type="radio"] {
+    display: none;
+}
+
+.goal-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.goal-emoji {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.goal-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.goal-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.goal-desc {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.goal-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--panel-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: transparent;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.goal-option.selected .goal-check {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: #fff;
+    box-shadow: 0 2px 8px var(--accent-blue-glow);
+}
+
+/* ====================== */
+/* AI NOTE BANNER         */
+/* ====================== */
+.ai-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(37, 99, 235, 0.08) 100%);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: 14px;
+    backdrop-filter: blur(8px);
+}
+
+.ai-note-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.ai-note p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* ====================== */
+/* SAVE BUTTON            */
+/* ====================== */
+.settings-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.save-btn {
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-purple) 100%);
+    box-shadow: 0 6px 20px var(--accent-blue-glow);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    border-radius: 14px;
+    min-width: 180px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.save-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px var(--accent-blue-glow);
+    filter: brightness(1.1);
+}
+
+.save-btn.saved {
+    background: linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-emerald-dark) 100%);
+    box-shadow: 0 6px 20px var(--accent-emerald-glow);
+}
