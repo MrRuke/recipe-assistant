@@ -42,7 +42,15 @@ export class LanguageService {
             'card.carbs': 'Carbs',
             'card.ingredients': 'Ingredients',
             'card.substitutions': 'Substitutions',
-            'card.how_to_cook': 'How to cook'
+            'card.how_to_cook': 'How to cook',
+            'generator.toast.refine.success': 'Recipe updated!',
+            'generator.toast.refine.error': 'Error updating recipe',
+            'generator.toast.save.success': 'Recipe saved!',
+            'generator.toast.save.error': 'Error saving recipe',
+            'catalog.toast.error': 'Error loading catalog',
+            'favorites.toast.load.error': 'Error loading favorites',
+            'favorites.toast.delete.success': 'Recipe removed from favorites',
+            'favorites.toast.delete.error': 'Error removing recipe'
         },
         ru: {
             'app.title': 'AI Recipe Assistant',
@@ -79,7 +87,15 @@ export class LanguageService {
             'card.carbs': 'Углеводы',
             'card.ingredients': 'Ингредиенты',
             'card.substitutions': 'Замены',
-            'card.how_to_cook': 'Как готовить'
+            'card.how_to_cook': 'Как готовить',
+            'generator.toast.refine.success': 'Рецепт обновлен!',
+            'generator.toast.refine.error': 'Ошибка обновления рецепта',
+            'generator.toast.save.success': 'Рецепт сохранен!',
+            'generator.toast.save.error': 'Ошибка сохранения рецепта',
+            'catalog.toast.error': 'Ошибка загрузки каталога',
+            'favorites.toast.load.error': 'Ошибка загрузки избранного',
+            'favorites.toast.delete.success': 'Рецепт удален из избранного',
+            'favorites.toast.delete.error': 'Ошибка удаления рецепта'
         }
     };
 

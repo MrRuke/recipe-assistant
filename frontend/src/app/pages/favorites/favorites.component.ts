@@ -38,11 +38,10 @@ export class FavoritesComponent {
             next: (res) => {
                 this.favorites = res.favorites;
                 this.cdr.detectChanges();
-                this.toastService.show('Test');
             },
             error: (err) => {
                 console.error(err);
-                this.toastService.show('Test');
+                this.toastService.show(this.translate('favorites.toast.load.error'), 'error');
             }
         });
     }
@@ -72,8 +71,12 @@ export class FavoritesComponent {
             next: () => {
                 this.loadFavorites();
                 this.closeDeleteModal();
+                this.toastService.show(this.translate('favorites.toast.delete.success'), 'success');
             },
-            error: (err) => console.error(err)
+            error: (err) => {
+                console.error(err);
+                this.toastService.show(this.translate('favorites.toast.delete.error'), 'error');
+            }
         });
     }
 

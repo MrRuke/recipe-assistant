@@ -50,7 +50,7 @@ export class GeneratorComponent implements OnInit {
 
   protected generateRecipe(): void {
     if (!this.searchQuery().trim()) return;
-    this.toastService.show(this.translate('generator.toast.generating'));
+    this.toastService.show(this.translate('generator.toast.generating'), 'info');
     this.isLoading.set(true);
     this.currentRecipe.set(null);
     this.isSaved.set(false);
@@ -62,12 +62,12 @@ export class GeneratorComponent implements OnInit {
         this.currentRecipe.set(recipe);
         this.isLoading.set(false);
         this.cdr.detectChanges();
-        this.toastService.show(this.translate('generator.toast.success'));
+        this.toastService.show(this.translate('generator.toast.success'), 'success');
       },
       error: (err) => {
         console.error('Error:', err);
         this.isLoading.set(false);
-        this.toastService.show(this.translate('generator.toast.error'));
+        this.toastService.show(this.translate('generator.toast.error'), 'error');
       }
     });
   }
@@ -82,10 +82,12 @@ export class GeneratorComponent implements OnInit {
                 this.revisionsLeft.set(this.revisionsLeft() - 1);
                 this.refinementQuery.set('');
                 this.isLoading.set(false);
+                this.toastService.show(this.translate('generator.toast.refine.success'), 'success');
             },
             error: (err) => {
                 console.error('Error:', err);
                 this.isLoading.set(false);
+                this.toastService.show(this.translate('generator.toast.refine.error'), 'error');
             }
         });
     }
@@ -96,10 +98,11 @@ export class GeneratorComponent implements OnInit {
         this.recipeService.saveRecipe(this.originalQuery()!, this.currentRecipe()!).subscribe({
             next: () => {
                 this.isSaved.set(true);
-                alert(this.translate('generator.alert.saved'));
+                this.toastService.show(this.translate('generator.toast.save.success'), 'success');
             },
             error: (err) => {
                 console.error('Error:', err);
+                this.toastService.show(this.translate('generator.toast.save.error'), 'error');
             }
         });
     }
