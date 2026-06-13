@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
-interface ToastMessage {
+export type ToastType = 'success' | 'error' | 'info';
+
+export interface ToastMessage {
   msg: string;
+  type?: ToastType;
   duration?: number;
 }
 
@@ -12,8 +15,8 @@ interface ToastMessage {
 export class ToastService {
   private toastSubject = new Subject<ToastMessage>();
 
-  show(message: string, duration: number = 3000): void {
-    this.toastSubject.next({ msg: message, duration });
+  show(message: string, type: ToastType = 'info', duration: number = 3000): void {
+    this.toastSubject.next({ msg: message, type, duration });
   }
 
   getToast$(): Observable<ToastMessage> {

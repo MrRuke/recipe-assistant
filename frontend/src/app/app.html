@@ -1,17 +1,30 @@
 <div class="container">
     <div class="header-row">
-        <h1>AI Recipe Assistant</h1>
-        <button class="theme-toggle" (click)="toggleTheme()" aria-label="Toggle theme">
-            {{ isDark() ? '☀️' : '🌙' }}
-        </button>
+        <h1>{{ translate('app.title') }}</h1>
+        <div class="header-controls">
+            <select class="lang-selector" (change)="setLanguage($event)">
+                <option value="en" [selected]="lang() === 'en'">EN</option>
+                <option value="ru" [selected]="lang() === 'ru'">RU</option>
+            </select>
+            <button class="theme-toggle" (click)="toggleTheme()" aria-label="Toggle theme">
+                {{ isDark() ? '☀️' : '🌙' }}
+            </button>
+        </div>
     </div>
 
     <div class="nav-tabs">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-btn">
-            Create recipe
+            {{ translate('app.nav.create') }}
         </a>
-        <a routerLink="/favorites" routerLinkActive="active" class="nav-btn">My favories</a>
-        <a routerLink="/catalog" routerLinkActive="active" class="nav-btn">Catalog</a>
+        <a routerLink="/favorites" routerLinkActive="active" class="nav-btn">
+            {{ translate('app.nav.favorites') }}
+        </a>
+        <a routerLink="/catalog" routerLinkActive="active" class="nav-btn">
+            {{ translate('app.nav.catalog') }}
+        </a>
+        <a routerLink="/settings" routerLinkActive="active" class="nav-btn nav-btn-settings">
+            ⚙️ {{ translate('app.nav.settings') }}
+        </a>
     </div>
 
     <router-outlet></router-outlet>

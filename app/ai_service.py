@@ -60,7 +60,38 @@ generation_config = types.GenerateContentConfig(
 )
 
 
-def generate_recipe_from_ai(query: str) -> dict:
+def _build_profile_context(user_profile: dict | None) -> str:
+    """Builds a human-readable profile block to inject into the prompt."""
+    if not user_profile:
+        return ""
+
+    height = user_profile.get("height_cm")
+    weight = user_profile.get("weight_kg")
+    goal = user_profile.get("goal", "maintain")
+
+    goal_labels = {
+        "lose": "Weight Loss (calorie deficit, higher protein, lower carbs)",
+        "maintain": "Maintain Weight (balanced macros, moderate calories)",
+        "gain": "Muscle Gain (calorie surplus, very high protein)",
+    }
+    goal_description = goal_labels.get(goal, "Maintain Weight")
+
+    bmi_note = ""
+    if height and weight and height > 0:
+        bmi = weight / ((height / 100) ** 2)
+        bmi_note = f" (BMI ≈ {bmi:.1f})"
+
+    parts = ["User Profile:"]
+    if height:
+        parts.append(f"  - Height: {height} cm")
+    if weight:
+        parts.append(f"  - Weight: {weight} kg{bmi_note}")
+    parts.append(f"  - Goal: {goal_description}")
+
+    return "\n".join(parts)
+
+
+def generate_recipe_from_ai(query: str, user_profile: dict | None = None) -> dict:
     """Searches the context in the database and generates a recipe."""
     try:
         embed_response = client.models.embed_content(
@@ -77,9 +108,17 @@ def generate_recipe_from_ai(query: str) -> dict:
         if results["documents"] and results["documents"][0]:
             retrieved_context = "\n\n".join(results["documents"][0])
 
+        profile_context = _build_profile_context(user_profile)
+        profile_section = (
+            f"\n        {profile_context}\n"
+            f"        IMPORTANT: Tailor the recipe's calorie count and macro split specifically to the user's profile above.\n"
+            if profile_context
+            else ""
+        )
+
         rag_prompt = f"""
-        You are a professional culinary assistant. Your goal is to provide high-quality recipes based on the provided Knowledge Base context.
-        
+        You are a professional culinary assistant and nutritionist. Your goal is to provide high-quality, personalized recipes based on the provided Knowledge Base context.
+        {profile_section}
         Knowledge Base:
         {retrieved_context}
         
@@ -90,6 +129,7 @@ def generate_recipe_from_ai(query: str) -> dict:
         2. FALLBACK TO INTERNAL KNOWLEDGE: If the Knowledge Base contains no information relevant to the user's query, use your own internal training data to provide a high-quality, relevant recipe.
         3. SUPPLEMENT MISSING DETAILS: If a recipe is found in the Knowledge Base but is missing required details (such as macronutrients, prep time, or specific steps) needed to complete the JSON schema, supplement the missing information using your internal knowledge.
         4. LANGUAGE: Always respond in user query language. If user request in English, then response should be in English too.
+        5. PERSONALIZATION: If a User Profile is provided, adjust portion sizes, calorie count and macro ratios (protein/fat/carbs) to match the user's goal. Do NOT mention the profile data in the recipe text itself.
         """
 
         response = client.models.generate_content(
@@ -101,6 +141,7 @@ def generate_recipe_from_ai(query: str) -> dict:
         return json.loads(response.text)  # type: ignore
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Update error: {str(e)}")
+
 
 
 def refine_recipe_with_ai(current_recipe: dict, refinement: str) -> dict:

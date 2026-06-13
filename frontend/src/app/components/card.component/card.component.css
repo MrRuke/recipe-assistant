@@ -58,7 +58,8 @@
   background: var(--danger-glow);
   color: var(--danger);
   border-color: rgba(239, 68, 68, 0.3);
-  margin-right: 0; /* Clear inline margin */
+  margin-right: 0;
+  /* Clear inline margin */
 }
 
 /* Macros Panel */
@@ -197,6 +198,7 @@ ol {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -209,13 +211,13 @@ ol {
     flex-direction: column;
     gap: 30px;
   }
-  
+
   .macros-box {
     flex-wrap: wrap;
     gap: 15px;
   }
-  
+
   .macros-box div {
-    flex: 1 1 40%;
+    flex: 1 1 auto;
   }
 }

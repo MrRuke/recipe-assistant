@@ -1,9 +1,9 @@
 <div class="search-box">
     <input type="text" [(ngModel)]="searchQuery"
-        placeholder="What recipe do you need? (for example: a chicken dinner under 400 kcal)" [disabled]="isLoading()">
+        [placeholder]="translate('generator.input.placeholder')" [disabled]="isLoading()">
 
     <button (click)="generateRecipe()" [disabled]="isLoading() || !searchQuery()">
-        {{ isLoading() ? 'Generating...' : 'Create recipe' }}
+        {{ isLoading() ? translate('generator.btn.generating') : translate('generator.btn.create') }}
     </button>
 </div>
 
@@ -11,7 +11,7 @@
 @if (isLoading()) {
 <div class="loading">
     <div class="loader-spinner"></div>
-    <p>Generating recipe...</p>
+    <p>{{ translate('generator.loading') }}</p>
 </div>
 }
 
@@ -21,20 +21,20 @@
 <app-card [recipe]="current">
     @if (revisionsLeft() > 0 && !isSaved()) {
     <div class="refine-box">
-        <p>Edits remaining: <strong>{{ revisionsLeft() }}</strong></p>
+        <p>{{ translate('generator.edits.remaining') }}<strong>{{ revisionsLeft() }}</strong></p>
 
         <div class="refine-input-group">
             <input type="text" [(ngModel)]="refinementQuery"
-                placeholder="What would you change? (For example: replace chicken with turkey)">
+                [placeholder]="translate('generator.input.refine.placeholder')">
 
-            <button (click)="refineRecipe()" [disabled]="!refinementQuery()">Update recipe</button>
+            <button (click)="refineRecipe()" [disabled]="!refinementQuery()">{{ translate('generator.btn.refine') }}</button>
         </div>
     </div>
     }
 
     <div class="actions">
         <button class="save-btn" (click)="saveRecipe()" [disabled]="isSaved()">
-            {{ isSaved() ? 'Saved' : 'Save' }}
+            {{ isSaved() ? translate('generator.btn.saved') : translate('generator.btn.save') }}
         </button>
     </div>
 </app-card>

@@ -1,9 +1,11 @@
-import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { RecipeService } from '../../api/api.service';
 import { Recipe } from '../../api/models/all.i';
 import { CardComponent } from '../../components/card.component/card.component';
 import { ToastService } from '../../services/toast.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
     selector: 'app-generator',
@@ -14,9 +16,11 @@ import { ToastService } from '../../services/toast.service';
     templateUrl: './generator.component.html',
     styleUrl: './generator.component.css',
 })
-export class GeneratorComponent {
+export class GeneratorComponent implements OnInit {
     private recipeService = inject(RecipeService);
+    private route = inject(ActivatedRoute);
     private cdr = inject(ChangeDetectorRef);
+    private langService = inject(LanguageService);
 
     protected isLoading = signal(false);
     protected isSaved = signal(false);
@@ -31,9 +35,22 @@ export class GeneratorComponent {
 
     private toastService = inject(ToastService);
 
+    ngOnInit(): void {
+        this.route.queryParams.subscribe(params => {
+            const query = params['q'];
+            if (query) {
+                this.searchQuery.set(query);
+            }
+        });
+    }
+
+    protected translate(key: string): string {
+        return this.langService.translate(key);
+    }
+
   protected generateRecipe(): void {
     if (!this.searchQuery().trim()) return;
-    this.toastService.show('Generating recipe...');
+    this.toastService.show(this.translate('generator.toast.generating'), 'info');
     this.isLoading.set(true);
     this.currentRecipe.set(null);
     this.isSaved.set(false);
@@ -45,12 +62,12 @@ export class GeneratorComponent {
         this.currentRecipe.set(recipe);
         this.isLoading.set(false);
         this.cdr.detectChanges();
-        this.toastService.show('Recipe generated!');
+        this.toastService.show(this.translate('generator.toast.success'), 'success');
       },
       error: (err) => {
         console.error('Error:', err);
         this.isLoading.set(false);
-        this.toastService.show('Error generating recipe');
+        this.toastService.show(this.translate('generator.toast.error'), 'error');
       }
     });
   }
@@ -65,10 +82,12 @@ export class GeneratorComponent {
                 this.revisionsLeft.set(this.revisionsLeft() - 1);
                 this.refinementQuery.set('');
                 this.isLoading.set(false);
+                this.toastService.show(this.translate('generator.toast.refine.success'), 'success');
             },
             error: (err) => {
                 console.error('Error:', err);
                 this.isLoading.set(false);
+                this.toastService.show(this.translate('generator.toast.refine.error'), 'error');
             }
         });
     }
@@ -79,10 +98,11 @@ export class GeneratorComponent {
         this.recipeService.saveRecipe(this.originalQuery()!, this.currentRecipe()!).subscribe({
             next: () => {
                 this.isSaved.set(true);
-                alert('Saved!');
+                this.toastService.show(this.translate('generator.toast.save.success'), 'success');
             },
             error: (err) => {
                 console.error('Error:', err);
+                this.toastService.show(this.translate('generator.toast.save.error'), 'error');
             }
         });
     }

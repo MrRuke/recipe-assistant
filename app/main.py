@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import recipes
+from .routers import recipes, settings
 
 app = FastAPI(title="PP Recipes AI API", version="1.0.0")
 
@@ -14,6 +14,7 @@ app.add_middleware(
 )
 
 app.include_router(recipes.router)
+app.include_router(settings.router)
 
 
 @app.get("/")

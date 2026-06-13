@@ -8,6 +8,12 @@ export interface Test {
     values: string;
 }
 
+export interface UserSettings {
+    height_cm: number | null;
+    weight_kg: number | null;
+    goal: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -43,5 +49,13 @@ export class RecipeService {
 
     getCatalog(): Observable<{catalog: Test[]}> {
         return this.http.get<{catalog: Test[]}>(`${this.apiUrl}/catalog`);
+    }
+
+    getSettings(): Observable<UserSettings> {
+        return this.http.get<UserSettings>('/api/settings');
+    }
+
+    saveSettings(settings: UserSettings): Observable<UserSettings> {
+        return this.http.put<UserSettings>('/api/settings', settings);
     }
 }
