@@ -34,9 +34,15 @@ body.dark-theme h1 {
   text-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
 }
 
-.theme-toggle {
+.header-controls {
   position: absolute;
   right: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
   color: var(--text-primary);
@@ -62,6 +68,42 @@ body.dark-theme h1 {
 
 .theme-toggle:active {
   transform: scale(0.95);
+}
+
+.lang-selector {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  color: var(--text-primary);
+  padding: 8px 32px 8px 12px;
+  border-radius: 12px;
+  font-family: var(--font-header);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: var(--panel-shadow);
+  backdrop-filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%2364748b' d='M1 1.5L6 6.5L11 1.5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+body.dark-theme .lang-selector {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%2394a3b8' d='M1 1.5L6 6.5L11 1.5'/></svg>");
+}
+
+.lang-selector:hover {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 10px var(--accent-blue-glow);
+  transform: translateY(-1px);
+}
+
+.lang-selector:focus {
+  outline: none;
+  border-color: var(--accent-blue);
 }
 
 .nav-tabs {

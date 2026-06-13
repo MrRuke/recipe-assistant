@@ -6,22 +6,22 @@
     <p class="description">{{ current.description }}</p>
 
     <div class="meta-info">
-        <span class="badge time">⏱ {{ current.prep_time_minutes }} мин</span>
+        <span class="badge time">⏱ {{ current.prep_time_minutes }} {{ translate('card.prep_time') }}</span>
 
-        <span class="badge calories">🔥 {{ current.macros.calories }} ккал</span>
+        <span class="badge calories">🔥 {{ current.macros.calories }} {{ translate('card.calories') }}</span>
     </div>
 
     <div class="macros-box">
-        <div><strong>Protein:</strong> {{ current.macros.protein_g }}g</div>
+        <div><strong>{{ translate('card.protein') }}:</strong> {{ current.macros.protein_g }}g</div>
 
-        <div><strong>Fat:</strong> {{ current.macros.fat_g }}g</div>
+        <div><strong>{{ translate('card.fat') }}:</strong> {{ current.macros.fat_g }}g</div>
 
-        <div><strong>Carbs:</strong> {{ current.macros.carbs_g }}g</div>
+        <div><strong>{{ translate('card.carbs') }}:</strong> {{ current.macros.carbs_g }}g</div>
     </div>
 
     <div class="recipe-content">
         <div class="column">
-            <h3>🛒 Ingredients</h3>
+            <h3>🛒 {{ translate('card.ingredients') }}</h3>
             <ul>
                 @for (item of current.ingredients; track $index) {
                 <li>
@@ -30,7 +30,7 @@
                 }
             </ul>
 
-            <h3>🔄 Substitutions</h3>
+            <h3>🔄 {{ translate('card.substitutions') }}</h3>
             <ul class="substitutions">
 
                 @for (sub of current.substitutions; track $index) {
@@ -40,7 +40,7 @@
         </div>
 
         <div class="column">
-            <h3>👨‍🍳 How to cook</h3>
+            <h3>👨‍🍳 {{ translate('card.how_to_cook') }}</h3>
             <ol>
                 @for (step of current.steps; track $index) {
                 <li>{{ step }}</li>

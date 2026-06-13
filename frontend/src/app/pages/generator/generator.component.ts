@@ -5,6 +5,7 @@ import { RecipeService } from '../../api/api.service';
 import { Recipe } from '../../api/models/all.i';
 import { CardComponent } from '../../components/card.component/card.component';
 import { ToastService } from '../../services/toast.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
     selector: 'app-generator',
@@ -19,6 +20,7 @@ export class GeneratorComponent implements OnInit {
     private recipeService = inject(RecipeService);
     private route = inject(ActivatedRoute);
     private cdr = inject(ChangeDetectorRef);
+    private langService = inject(LanguageService);
 
     protected isLoading = signal(false);
     protected isSaved = signal(false);
@@ -42,9 +44,13 @@ export class GeneratorComponent implements OnInit {
         });
     }
 
+    protected translate(key: string): string {
+        return this.langService.translate(key);
+    }
+
   protected generateRecipe(): void {
     if (!this.searchQuery().trim()) return;
-    this.toastService.show('Generating recipe...');
+    this.toastService.show(this.translate('generator.toast.generating'));
     this.isLoading.set(true);
     this.currentRecipe.set(null);
     this.isSaved.set(false);
@@ -56,12 +62,12 @@ export class GeneratorComponent implements OnInit {
         this.currentRecipe.set(recipe);
         this.isLoading.set(false);
         this.cdr.detectChanges();
-        this.toastService.show('Recipe generated!');
+        this.toastService.show(this.translate('generator.toast.success'));
       },
       error: (err) => {
         console.error('Error:', err);
         this.isLoading.set(false);
-        this.toastService.show('Error generating recipe');
+        this.toastService.show(this.translate('generator.toast.error'));
       }
     });
   }
@@ -90,7 +96,7 @@ export class GeneratorComponent implements OnInit {
         this.recipeService.saveRecipe(this.originalQuery()!, this.currentRecipe()!).subscribe({
             next: () => {
                 this.isSaved.set(true);
-                alert('Saved!');
+                alert(this.translate('generator.alert.saved'));
             },
             error: (err) => {
                 console.error('Error:', err);

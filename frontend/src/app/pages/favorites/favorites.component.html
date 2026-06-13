@@ -1,16 +1,16 @@
 @if(selectedFavorite) {
 <div class="recipe-card">
-    <button class="back-btn" (click)="closeFavoriteDetails()">Go back</button>
+    <button class="back-btn" (click)="closeFavoriteDetails()">{{ translate('favorites.btn.back') }}</button>
 
     <app-card [recipe]="selectedFavorite"></app-card>
 </div>
 } @else {
 <div>
-    <h2 style="text-align: center;">Saved recipes</h2>
+    <h2 style="text-align: center;">{{ translate('favorites.title') }}</h2>
 
     @if(favorites.length === 0) {
     <p style="text-align: center; color: #7f8c8d;">
-        You do not have saved recipes
+        {{ translate('favorites.empty') }}
     </p>
     }
 
@@ -20,13 +20,13 @@
             <h3>{{ fav.recipe_data.title }}</h3>
             <p class="description">{{ fav.recipe_data.description }}</p>
             <div class="macros-mini">
-                <span class="badge calories">{{ fav.recipe_data.macros.calories }} kcal</span>
-                <span class="badge mini-macro">Protein: {{ fav.recipe_data.macros.protein_g }}g</span>
-                <span class="badge mini-macro">Fat: {{ fav.recipe_data.macros.fat_g }}g</span>
-                <span class="badge mini-macro">Carbs: {{ fav.recipe_data.macros.carbs_g }}g</span>
+                <span class="badge calories">{{ fav.recipe_data.macros.calories }} {{ translate('card.calories') }}</span>
+                <span class="badge mini-macro">{{ translate('card.protein') }}: {{ fav.recipe_data.macros.protein_g }}g</span>
+                <span class="badge mini-macro">{{ translate('card.fat') }}: {{ fav.recipe_data.macros.fat_g }}g</span>
+                <span class="badge mini-macro">{{ translate('card.carbs') }}: {{ fav.recipe_data.macros.carbs_g }}g</span>
             </div>
             <div class="card-actions">
-                <button class="view-btn" (click)="viewFavoriteDetails(fav.recipe_data)">Open details</button>
+                <button class="view-btn" (click)="viewFavoriteDetails(fav.recipe_data)">{{ translate('favorites.btn.open') }}</button>
                 <button class="delete-btn" (click)="confirmDelete(fav)" aria-label="Delete recipe">
                     <i class="fa-solid fa-trash"></i>
                 </button>
@@ -40,12 +40,12 @@
 @if(showDeleteModal && recipeToDelete) {
 <div class="modal-overlay" (click)="closeDeleteModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
-        <h3>Remove from favorites?</h3>
-        <p>Are you sure you want to remove <strong>{{ recipeToDelete.recipe_data.title }}</strong> from your favorites?
+        <h3>{{ translate('favorites.confirm.title') }}</h3>
+        <p>{{ translate('favorites.confirm.text') }}<strong>{{ recipeToDelete.recipe_data.title }}</strong>{{ translate('favorites.confirm.text2') }}
         </p>
         <div class="modal-buttons">
-            <button class="cancel-btn" (click)="closeDeleteModal()">Cancel</button>
-            <button class="confirm-btn" (click)="deleteRecipe()">Delete</button>
+            <button class="cancel-btn" (click)="closeDeleteModal()">{{ translate('favorites.btn.cancel') }}</button>
+            <button class="confirm-btn" (click)="deleteRecipe()">{{ translate('favorites.btn.delete') }}</button>
         </div>
     </div>
 </div>

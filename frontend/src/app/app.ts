@@ -1,6 +1,7 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ToastComponent } from './components/toast.component/toast.component';
+import { LanguageService } from './services/language.service';
 
 @Component({
     selector: 'app-root',
@@ -9,7 +10,10 @@ import { ToastComponent } from './components/toast.component/toast.component';
     styleUrl: './app.css'
 })
 export class App implements OnInit {
+    private langService = inject(LanguageService);
+
     protected isDark = signal(false);
+    protected lang = this.langService.language;
 
     ngOnInit() {
         const savedTheme = localStorage.getItem('theme');
@@ -22,6 +26,15 @@ export class App implements OnInit {
 
     protected toggleTheme() {
         this.setTheme(!this.isDark());
+    }
+
+    protected setLanguage(event: Event) {
+        const select = event.target as HTMLSelectElement;
+        this.langService.setLanguage(select.value as 'en' | 'ru');
+    }
+
+    protected translate(key: string): string {
+        return this.langService.translate(key);
     }
 
     private setTheme(dark: boolean) {
