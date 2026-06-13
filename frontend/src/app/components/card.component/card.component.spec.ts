@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CardComponent } from './card.component';
 
 describe('CardComponent', () => {
@@ -13,6 +12,22 @@ describe('CardComponent', () => {
 
         fixture = TestBed.createComponent(CardComponent);
         component = fixture.componentInstance;
+        fixture.componentRef.setInput('recipe', {
+            title: 'Test Recipe',
+            description: 'Test Description',
+            macros: {
+                calories: 300,
+                protein_g: 20,
+                fat_g: 10,
+                carbs_g: 30
+            },
+            prep_time_minutes: 20,
+            ingredients: [
+                { name: 'Ingredient 1', amount: '100g' }
+            ],
+            steps: ['Step 1'],
+            substitutions: []
+        });
         await fixture.whenStable();
     });
 

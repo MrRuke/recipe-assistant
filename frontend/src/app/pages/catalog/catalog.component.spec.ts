@@ -1,17 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CatalogComponent } from './catalog.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 
-import { Generator } from './generator';
-
-describe('Generator', () => {
-    let component: Generator;
-    let fixture: ComponentFixture<Generator>;
+describe('CatalogComponent', () => {
+    let component: CatalogComponent;
+    let fixture: ComponentFixture<CatalogComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [Generator],
+            imports: [CatalogComponent],
+            providers: [
+                provideHttpClient(),
+                provideRouter([])
+            ]
         }).compileComponents();
 
-        fixture = TestBed.createComponent(Generator);
+        fixture = TestBed.createComponent(CatalogComponent);
         component = fixture.componentInstance;
         await fixture.whenStable();
     });

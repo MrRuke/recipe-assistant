@@ -9,7 +9,7 @@
             <h4 class="group-title">{{ group.groupName }}</h4>
             <div class="catalog-tags">
                 @for (recipeName of group.values; track $index) {
-                <button class="catalog-tag">
+                <button class="catalog-tag" (click)="selectRecipe(recipeName)">
                     {{ recipeName }}
                 </button>
                 }

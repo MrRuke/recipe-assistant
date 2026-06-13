@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { RecipeService } from '../../api/api.service';
 import { Recipe } from '../../api/models/all.i';
 import { CardComponent } from '../../components/card.component/card.component';
@@ -14,8 +15,9 @@ import { ToastService } from '../../services/toast.service';
     templateUrl: './generator.component.html',
     styleUrl: './generator.component.css',
 })
-export class GeneratorComponent {
+export class GeneratorComponent implements OnInit {
     private recipeService = inject(RecipeService);
+    private route = inject(ActivatedRoute);
     private cdr = inject(ChangeDetectorRef);
 
     protected isLoading = signal(false);
@@ -30,6 +32,15 @@ export class GeneratorComponent {
     private originalQuery = signal<string | undefined>(undefined);
 
     private toastService = inject(ToastService);
+
+    ngOnInit(): void {
+        this.route.queryParams.subscribe(params => {
+            const query = params['q'];
+            if (query) {
+                this.searchQuery.set(query);
+            }
+        });
+    }
 
   protected generateRecipe(): void {
     if (!this.searchQuery().trim()) return;
