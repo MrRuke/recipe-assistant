@@ -13,7 +13,24 @@ router = APIRouter(prefix="/api/recipes", tags=["Recipes"])
 
 @router.post("/generate")
 async def generate_recipe(req: GenerateRequest):
-    return generate_recipe_from_ai(req.query)
+    # Load user profile to personalize the recipe
+    user_profile = None
+    try:
+        cursor = sqlite_conn.cursor()
+        cursor.execute(
+            "SELECT height_cm, weight_kg, goal FROM user_settings WHERE id = 1"
+        )
+        row = cursor.fetchone()
+        if row and any(v is not None for v in row):
+            user_profile = {
+                "height_cm": row[0],
+                "weight_kg": row[1],
+                "goal": row[2] or "maintain",
+            }
+    except Exception:
+        pass  # Profile is optional — generation proceeds without it
+
+    return generate_recipe_from_ai(req.query, user_profile=user_profile)
 
 
 @router.post("/refine")
