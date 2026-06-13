@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -25,3 +25,9 @@ class RecipeSchema(BaseModel):
     ingredients: List[dict]
     steps: List[str]
     substitutions: List[str]
+
+
+class UserSettingsSchema(BaseModel):
+    height_cm: Optional[float] = None
+    weight_kg: Optional[float] = None
+    goal: str = "maintain"

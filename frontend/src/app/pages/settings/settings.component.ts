@@ -1,6 +1,8 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LanguageService } from '../../services/language.service';
+import { RecipeService } from '../../api/api.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-settings',
@@ -10,10 +12,11 @@ import { LanguageService } from '../../services/language.service';
 })
 export class SettingsComponent implements OnInit {
     private langService = inject(LanguageService);
+    private recipeService = inject(RecipeService);
+    private toastService = inject(ToastService);
 
-    protected height = signal<number | null>(null);
-    protected weight = signal<number | null>(null);
-    protected goal = signal<string>('maintain');
+    protected loading = signal(true);
+    protected saving = signal(false);
     protected saved = signal(false);
 
     protected heightValue: number | null = null;
@@ -21,20 +24,33 @@ export class SettingsComponent implements OnInit {
     protected goalValue: string = 'maintain';
 
     ngOnInit() {
-        const savedSettings = localStorage.getItem('userSettings');
-        if (savedSettings) {
-            try {
-                const settings = JSON.parse(savedSettings);
-                this.heightValue = settings.height ?? null;
-                this.weightValue = settings.weight ?? null;
+        this.loadSettings();
+    }
+
+    private loadSettings() {
+        this.loading.set(true);
+        this.recipeService.getSettings().subscribe({
+            next: (settings) => {
+                this.heightValue = settings.height_cm;
+                this.weightValue = settings.weight_kg;
                 this.goalValue = settings.goal ?? 'maintain';
-                this.height.set(this.heightValue);
-                this.weight.set(this.weightValue);
-                this.goal.set(this.goalValue);
-            } catch {
-                // ignore
+                this.loading.set(false);
+            },
+            error: () => {
+                // Fallback to localStorage if API fails
+                const cached = localStorage.getItem('userSettings');
+                if (cached) {
+                    try {
+                        const s = JSON.parse(cached);
+                        this.heightValue = s.height ?? null;
+                        this.weightValue = s.weight ?? null;
+                        this.goalValue = s.goal ?? 'maintain';
+                    } catch { /* ignore */ }
+                }
+                this.loading.set(false);
+                this.toastService.show(this.translate('settings.toast.load.error'), 'error');
             }
-        }
+        });
     }
 
     protected translate(key: string): string {
@@ -42,17 +58,33 @@ export class SettingsComponent implements OnInit {
     }
 
     protected onSave() {
+        if (this.saving()) return;
+        this.saving.set(true);
+
         const settings = {
-            height: this.heightValue,
-            weight: this.weightValue,
+            height_cm: this.heightValue,
+            weight_kg: this.weightValue,
             goal: this.goalValue
         };
-        localStorage.setItem('userSettings', JSON.stringify(settings));
-        this.height.set(this.heightValue);
-        this.weight.set(this.weightValue);
-        this.goal.set(this.goalValue);
-        this.saved.set(true);
-        setTimeout(() => this.saved.set(false), 2500);
+
+        this.recipeService.saveSettings(settings).subscribe({
+            next: () => {
+                // Also persist locally as a fast cache
+                localStorage.setItem('userSettings', JSON.stringify({
+                    height: this.heightValue,
+                    weight: this.weightValue,
+                    goal: this.goalValue
+                }));
+                this.saving.set(false);
+                this.saved.set(true);
+                this.toastService.show(this.translate('settings.toast.save.success'), 'success');
+                setTimeout(() => this.saved.set(false), 2500);
+            },
+            error: () => {
+                this.saving.set(false);
+                this.toastService.show(this.translate('settings.toast.save.error'), 'error');
+            }
+        });
     }
 
     protected getBMI(): string | null {

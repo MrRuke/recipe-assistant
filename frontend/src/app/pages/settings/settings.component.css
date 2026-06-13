@@ -12,6 +12,49 @@
 }
 
 /* ====================== */
+/* SKELETON LOADER        */
+/* ====================== */
+@keyframes shimmer {
+    0% { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+}
+
+.settings-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    animation: fadeInUp 0.3s ease;
+}
+
+.skeleton-header,
+.skeleton-card {
+    background: linear-gradient(
+        90deg,
+        var(--panel-bg) 25%,
+        rgba(255,255,255,0.06) 50%,
+        var(--panel-bg) 75%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.4s infinite linear;
+    border-radius: 16px;
+    border: 1px solid var(--panel-border);
+}
+
+.skeleton-header {
+    height: 72px;
+}
+
+.skeleton-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.skeleton-card {
+    height: 320px;
+}
+
+/* ====================== */
 /* HEADER                 */
 /* ====================== */
 .settings-header {
@@ -378,4 +421,21 @@
 .save-btn.saved {
     background: linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-emerald-dark) 100%);
     box-shadow: 0 6px 20px var(--accent-emerald-glow);
+}
+
+/* ====================== */
+/* BUTTON SPINNER         */
+/* ====================== */
+.btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }

@@ -74,7 +74,11 @@ export class LanguageService {
             'settings.goal.gain.desc': 'Calorie surplus, high protein',
             'settings.ai.note': '🔮 Soon, AI will use your height, weight and goal to generate recipes with the perfect calorie count and macro split specifically for you.',
             'settings.save': 'Save Settings',
-            'settings.saved': 'Saved!'
+            'settings.saving': 'Saving...',
+            'settings.saved': 'Saved!',
+            'settings.toast.load.error': 'Failed to load settings',
+            'settings.toast.save.success': 'Settings saved!',
+            'settings.toast.save.error': 'Failed to save settings'
         },
         ru: {
             'app.title': 'AI Recipe Assistant',
@@ -143,7 +147,11 @@ export class LanguageService {
             'settings.goal.gain.desc': 'Профицит калорий, высокое содержание белка',
             'settings.ai.note': '🔮 Скоро ИИ будет использовать ваши рост, вес и цель для генерации рецептов с идеальной калорийностью и балансом макросов специально для вас.',
             'settings.save': 'Сохранить настройки',
-            'settings.saved': 'Сохранено!'
+            'settings.saving': 'Сохранение...',
+            'settings.saved': 'Сохранено!',
+            'settings.toast.load.error': 'Не удалось загрузить настройки',
+            'settings.toast.save.success': 'Настройки сохранены!',
+            'settings.toast.save.error': 'Не удалось сохранить настройки'
         }
     };
 

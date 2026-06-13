@@ -1,11 +1,20 @@
 <div class="settings-page">
-    <div class="settings-header">
-        <div class="settings-icon">⚙️</div>
-        <div class="settings-header-text">
-            <h1>{{ translate('settings.title') }}</h1>
-            <p class="settings-subtitle">{{ translate('settings.subtitle') }}</p>
+    @if (loading()) {
+        <div class="settings-skeleton">
+            <div class="skeleton-header"></div>
+            <div class="skeleton-grid">
+                <div class="skeleton-card"></div>
+                <div class="skeleton-card"></div>
+            </div>
         </div>
-    </div>
+    } @else {
+        <div class="settings-header">
+            <div class="settings-icon">⚙️</div>
+            <div class="settings-header-text">
+                <h1>{{ translate('settings.title') }}</h1>
+                <p class="settings-subtitle">{{ translate('settings.subtitle') }}</p>
+            </div>
+        </div>
 
     <div class="settings-grid">
         <!-- Physical Parameters Card -->
@@ -117,13 +126,18 @@
         <button
             class="save-btn"
             [class.saved]="saved()"
+            [disabled]="saving()"
             (click)="onSave()"
         >
-            @if (saved()) {
+            @if (saving()) {
+                <span class="btn-spinner"></span>
+                <span>{{ translate('settings.saving') }}</span>
+            } @else if (saved()) {
                 <span>✓ {{ translate('settings.saved') }}</span>
             } @else {
                 <span>{{ translate('settings.save') }}</span>
             }
         </button>
     </div>
+    } <!-- end @else loading -->
 </div>

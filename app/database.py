@@ -16,6 +16,19 @@ def init_sqlite():
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS user_settings (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            height_cm REAL,
+            weight_kg REAL,
+            goal TEXT DEFAULT 'maintain',
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    cursor.execute("""
+        INSERT OR IGNORE INTO user_settings (id, height_cm, weight_kg, goal)
+        VALUES (1, NULL, NULL, 'maintain')
+    """)
     conn.commit()
     return conn
 
